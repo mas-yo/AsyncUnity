@@ -22,10 +22,10 @@
 
 ### シーンの始まりと終わり
 - `public static async UniTask<Result> StartAsync()` を処理の起点とする。
-- シーンの戻り値として `public struct Result` を定義する。
+- シーンの戻り値として `public record struct Result` を定義する。
 
 #### StartAsync() の処理
-- 必要に応じて引数を取って良い。ただしstructのみとする。
+- 必要に応じて引数を取って良い。ただし record か record struct のみとする。
 - シーンをロードし、`Hoge` GameObjectを取得する。
 - `Hoge` class のインスタンスメソッドを呼び出してシーンの処理を行う。
 - シーンの処理が終わったら、Resultを返す。
@@ -37,10 +37,10 @@
 
 - `static class`とする
 - `public static async UniTask<Result> StartAsync()` を処理の起点とする。
-- 処理結果を表す構造体として `public struct Result` を定義する。
+- 処理結果を表す構造体として `public record struct Result` を定義する。
 
 ### StartAsync() の処理
-- 必要に応じて引数を取って良い。ただしstructのみとする。
+- 必要に応じて引数を取って良い。ただし record か record struct のみとする。
 - この関数は副作用を持ってはならない。
 - 処理が終わったら、Resultを返す。
 
