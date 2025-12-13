@@ -1,3 +1,4 @@
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -13,9 +14,11 @@ namespace Genie
     
         private async UniTask MainLoopAsync()
         {
+            var cts = new CancellationTokenSource();
+            var token = cts.Token;
             while (true)
             {
-                await Title.StartAsync();
+                await Title.StartAsync(token);
                 await Game.StartAsync();
             }
         

@@ -1,5 +1,8 @@
-﻿using UnityEngine;
+﻿using System.Threading;
+using UnityEngine;
 using Cysharp.Threading.Tasks;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Title : MonoBehaviour
 {
@@ -7,13 +10,11 @@ public class Title : MonoBehaviour
     {
     }
 
-    public static async UniTask<Result> StartAsync()
+    public static async UniTask<Result> StartAsync(CancellationToken token)
     {
-        // Title GameObjectを取得
-        var titleObj = GameObject.Find("Title");
-        // 必要な初期化やUI表示などをここで行う
-        // ...
-        // 結果を返す
+        await SceneManager.LoadSceneAsync("TitleScene", LoadSceneMode.Single);
+        var startButton = GameObject.Find("StartButton").GetComponent<Button>();
+        await startButton.OnClickAsync(token);
         return new Result();
     }
 }

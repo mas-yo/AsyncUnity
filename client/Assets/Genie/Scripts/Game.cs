@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Cysharp.Threading.Tasks;
+using UnityEngine.SceneManagement;
 
 public class Game : MonoBehaviour
 {
@@ -12,10 +13,10 @@ public class Game : MonoBehaviour
     // シーンの処理起点
     public static async UniTask<Result> StartAsync()
     {
-        // Gameオブジェクトを取得
-        var gameObj = GameObject.Find("Game");
-        // 必要なUnityの機能をここで利用可能
-        // ...
+        SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Single);
+        // var startButton = GameObject.Find("StartButton").GetComponent<Button>();
+        // await startButton.OnClickAsync(token);
+        await UniTask.DelayFrame(60); // ダミー待機
         return new Result();
     }
 }
