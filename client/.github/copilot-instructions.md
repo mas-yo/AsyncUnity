@@ -20,8 +20,6 @@
 - `Hoge` というGameObjectを配置し、`Hoge.cs` をアタッチする。
 - `Hoge` class は Monobehaviourを継承する。
 
-### Hoge classの中身
-
 ### シーンの始まりと終わり
 - `public static async UniTask<Result> StartAsync()` を処理の起点とする。
 - シーンの戻り値として `public struct Result` を定義する。
@@ -30,13 +28,7 @@
 - 必要に応じて引数を取って良い。ただしstructのみとする。
 - シーンをロードし、`Hoge` GameObjectを取得する。
 - `Hoge` class のインスタンスメソッドを呼び出してシーンの処理を行う。
-- シーンの処理が終わったら、シーンをアンロードし、Resultを返す。
-
-
-#### Result struct について
-- 処理の結果を表すstructとして定義する。
-
-- `StartAsync()` 内で `Hoge` GameObjectを取得しUnity提供の機能を使っても良い。
+- シーンの処理が終わったら、Resultを返す。
 
 
 ## 各種機能クラス
@@ -44,8 +36,12 @@
 シーンに依存しない機能（例：ログイン、リソースのダウンロード）のクラスを用意する。
 
 - `static class`とする
-- `public static async UniTask<Result> StartAsync()` を処理の起点とする。この関数は副作用を持ってはならない。
-- シーンの戻り値として `public struct Result` を定義する。
+- `public static async UniTask<Result> StartAsync()` を処理の起点とする。
+- 処理結果を表す構造体として `public struct Result` を定義する。
 
+### StartAsync() の処理
+- 必要に応じて引数を取って良い。ただしstructのみとする。
+- この関数は副作用を持ってはならない。
+- 処理が終わったら、Resultを返す。
 
 

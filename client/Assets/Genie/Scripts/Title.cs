@@ -5,7 +5,6 @@ public class Title : MonoBehaviour
 {
     public struct Result
     {
-        // 必要に応じてシーンの戻り値を定義
     }
 
     public static async UniTask<Result> StartAsync()
