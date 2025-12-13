@@ -7,11 +7,11 @@
 
 - MainSceneというシーンを１つ用意し、これをゲームの進行の起点とする。
 - MainSceneに`Main` というGameObjectを配置し、`Main.cs` をアタッチする。
-- Main.Start() から Main.StartAsync() を呼び出す。
-- Main.StartAsync() をゲームの進行の起点とする。
-- ゲームの状態を表す struct を定義し、Main.StartAsync() 内で定義する。
+- Main.Start() から Main.MainLoopAsync() を呼び出す。
+- Main.MainLoopAsync() をゲームの進行の起点とする。
+- ゲームの状態を表す struct を定義し、Main.MainLoopAsync() 内で定義する。
 - 後述する各シーンや機能クラスの StartAsync() を呼び出し、ゲームの状態を受け渡しながらゲームを進行させる。
-
+- ただしクライアント時間、サーバーセッション情報は通信の度に更新されるため、これらはゲームの状態に含めない。
 
 ## シーン
 
