@@ -8,10 +8,10 @@ namespace Genie
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
-            StartAsync().Forget();
+            MainLoopAsync().Forget();
         }
     
-        private async UniTask StartAsync()
+        private async UniTask MainLoopAsync()
         {
             while (true)
             {
