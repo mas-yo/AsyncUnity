@@ -19,7 +19,7 @@ namespace Genie
             while (true)
             {
                 await Title.StartAsync(token);
-                await Game.StartAsync();
+                await Game.StartAsync(token);
             }
         
         }
