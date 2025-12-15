@@ -1,7 +1,10 @@
-﻿using System.Threading;
+﻿using System;
+using System.Linq;
+using System.Threading;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using UnityEngine.SceneManagement;
+using Object = UnityEngine.Object;
 
 public class Game : MonoBehaviour
 {
@@ -23,35 +26,21 @@ public class Game : MonoBehaviour
         var moveAmount = 0.1f;
         while (true)
         {
-            var wTask = UniTask.WaitUntil(() => Input.GetKey(KeyCode.W), cancellationToken: token);
-            var sTask = UniTask.WaitUntil(() => Input.GetKey(KeyCode.S), cancellationToken: token);
-            var aTask = UniTask.WaitUntil(() => Input.GetKey(KeyCode.A), cancellationToken: token);
-            var dTask = UniTask.WaitUntil(() => Input.GetKey(KeyCode.D), cancellationToken: token);
-            var escTask = UniTask.WaitUntil(() => Input.GetKey(KeyCode.Escape), cancellationToken: token);
-
-            var winIndex = await UniTask.WhenAny(wTask, sTask, aTask, dTask, escTask);
-
-            if (winIndex == 4)
-            {
-                break;
-            }
-
-            switch (winIndex)
-            {
-                case 0:
-                    robot.transform.position += Vector3.forward * moveAmount;
-                    break;
-                case 1:
-                    robot.transform.position += Vector3.back * moveAmount;
-                    break;
-                case 2:
-                    robot.transform.position += Vector3.left * moveAmount;
-                    break;
-                case 3:
-                    robot.transform.position += Vector3.right * moveAmount;
-                    break;
-            }
+            await WaitAndDo(
+                token,
+                (() => Input.GetKey(KeyCode.W), () => robot.transform.position += Vector3.forward * moveAmount),
+                (() => Input.GetKey(KeyCode.S), () => robot.transform.position += Vector3.back * moveAmount),
+                (() => Input.GetKey(KeyCode.A), () => robot.transform.position += Vector3.left * moveAmount),
+                (() => Input.GetKey(KeyCode.D), () => robot.transform.position += Vector3.right * moveAmount),
+                (() => Input.GetKey(KeyCode.Escape), () => throw new OperationCanceledException())
+            );
         }
         return new Result();
+    }
+
+    public static async UniTask WaitAndDo(CancellationToken token, params (Func<bool> predicate, Action action)[] conditionsAndActions)
+    {
+        var index = await UniTask.WhenAny(conditionsAndActions.Select(x => UniTask.WaitUntil(() => x.predicate(), cancellationToken: token)).ToArray());
+        conditionsAndActions[index].action();
     }
 }
