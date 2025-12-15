@@ -23,6 +23,22 @@ public class Game : MonoBehaviour
         var animator = robot.GetComponentInChildren<Animator>();
         animator.Play("Run_guard_AR");//Idle_gunMiddle_AR
 
+        var cameraObj = GameObject.Find("Main Camera");
+        var cameraTransform = cameraObj.transform;
+
+        void UpdateCamera()
+        {
+            cameraTransform.position = robot.transform.position + new Vector3(0, 8, -8);
+            cameraTransform.LookAt(robot.transform.position + new Vector3(0, 2, 0));
+        }
+        void PlayRunAnimation()
+        {
+            animator.Play("Run_guard_AR");
+        }
+        void PlayIdleAnimation()
+        {
+            animator.Play("Idle_gunMiddle_AR");
+        }
 
         var moveAmount = 0.1f;
         while (true)
@@ -32,30 +48,34 @@ public class Game : MonoBehaviour
                 (() => Input.GetKey(KeyCode.W), () =>
                 {
                     robot.transform.position += Vector3.forward * moveAmount;
-                    animator.Play("Run_guard_AR");
+                    PlayRunAnimation();
+                    UpdateCamera();
                     return false;
                 }),
                 (() => Input.GetKey(KeyCode.S), () =>
                 {
                     robot.transform.position += Vector3.back * moveAmount;
-                    animator.Play("Run_guard_AR");
+                    PlayRunAnimation();
+                    UpdateCamera();
                     return false;
                 }),
                 (() => Input.GetKey(KeyCode.A), () =>
                 {
                     robot.transform.position += Vector3.left * moveAmount;
-                    animator.Play("Run_guard_AR");
+                    PlayRunAnimation();
+                    UpdateCamera();
                     return false;
                 }),
                 (() => Input.GetKey(KeyCode.D), () =>
                 {
                     robot.transform.position += Vector3.right * moveAmount;
-                    animator.Play("Run_guard_AR");
+                    PlayRunAnimation();
+                    UpdateCamera();
                     return false;
                 }),
                 (() => Input.anyKey == false, () =>
                 {
-                    animator.Play("Idle_gunMiddle_AR");
+                    PlayIdleAnimation();
                     return false;
                 }),
                 (() => Input.GetKey(KeyCode.Escape), () => { return true; })
@@ -65,9 +85,7 @@ public class Game : MonoBehaviour
                 break;
             }
         }
-        
         return new Result();
-
     }
 
     public static async UniTask<T> WaitAndDo<T>(CancellationToken token, params (Func<bool> condition, Func<T> action)[] conditionsAndActions)
