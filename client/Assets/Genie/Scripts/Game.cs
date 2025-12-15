@@ -12,7 +12,7 @@ public class Game : MonoBehaviour
     public static async UniTask<Result> StartAsync(CancellationToken token)
     {
         await SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Single);
-        var prefabRequest = Resources.LoadAsync<GameObject>("StarShip/StarShip");
+        var prefabRequest = Resources.LoadAsync<GameObject>("SciFiWarriorPBRHPPolyart/Prefabs/PBRCharacter");
         await prefabRequest;
         var prefab = (GameObject)prefabRequest.asset;
         var starShip = Object.Instantiate(prefab);
