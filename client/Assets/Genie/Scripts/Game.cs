@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks.Linq;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
@@ -16,6 +17,13 @@ public class Game : MonoBehaviour
     public static async UniTask<Result> StartAsync(CancellationToken token)
     {
         await SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Single);
+
+        {
+            var groundPrefab =
+                await Resources.LoadAsync<GameObject>("SimpleNaturePack/Prefabs/Ground_01");
+            Object.Instantiate(groundPrefab);
+        }
+        
         var prefabRequest = Resources.LoadAsync<GameObject>("SciFiWarriorPBRHPPolyart/Prefabs/PBRCharacter");
         await prefabRequest;
         var prefab = (GameObject)prefabRequest.asset;
@@ -41,56 +49,33 @@ public class Game : MonoBehaviour
         }
 
         var moveAmount = 0.1f;
-        while (true)
+        
+        await foreach(var _ in UniTaskAsyncEnumerable.EveryUpdate())
         {
-            var isEsc = await WaitAndDo(
-                token,
-                (() => Input.GetKey(KeyCode.W), () =>
-                {
-                    robot.transform.position += Vector3.forward * moveAmount;
-                    PlayRunAnimation();
-                    UpdateCamera();
-                    return false;
-                }),
-                (() => Input.GetKey(KeyCode.S), () =>
-                {
-                    robot.transform.position += Vector3.back * moveAmount;
-                    PlayRunAnimation();
-                    UpdateCamera();
-                    return false;
-                }),
-                (() => Input.GetKey(KeyCode.A), () =>
-                {
-                    robot.transform.position += Vector3.left * moveAmount;
-                    PlayRunAnimation();
-                    UpdateCamera();
-                    return false;
-                }),
-                (() => Input.GetKey(KeyCode.D), () =>
-                {
-                    robot.transform.position += Vector3.right * moveAmount;
-                    PlayRunAnimation();
-                    UpdateCamera();
-                    return false;
-                }),
-                (() => Input.anyKey == false, () =>
-                {
-                    PlayIdleAnimation();
-                    return false;
-                }),
-                (() => Input.GetKey(KeyCode.Escape), () => { return true; })
-            );
-            if (isEsc)
+            UpdateCamera();
+            if (Input.GetKey(KeyCode.W) ||
+                Input.GetKey(KeyCode.A) ||
+                Input.GetKey(KeyCode.S) ||
+                Input.GetKey(KeyCode.D))
             {
-                break;
+                robot.transform.position += new Vector3(
+                    (Input.GetKey(KeyCode.D) ? moveAmount : 0) + (Input.GetKey(KeyCode.A) ? -moveAmount : 0),
+                    0,
+                    (Input.GetKey(KeyCode.W) ? moveAmount : 0) + (Input.GetKey(KeyCode.S) ? -moveAmount : 0)
+                );
+                PlayRunAnimation();
+            }
+            else
+            {
+                PlayIdleAnimation();
             }
         }
         return new Result();
     }
 
-    public static async UniTask<T> WaitAndDo<T>(CancellationToken token, params (Func<bool> condition, Func<T> action)[] conditionsAndActions)
+    public static async UniTask<T> WaitAndDo<T>(CancellationToken token, params (UniTask waitTask, Func<T> action)[] conditionsAndActions)
     {
-        var index = await UniTask.WhenAny(conditionsAndActions.Select(x => UniTask.WaitUntil(() => x.condition(), cancellationToken: token)).ToArray());
+        var index = await UniTask.WhenAny(conditionsAndActions.Select(x => x.waitTask).ToArray());
         return conditionsAndActions[index].action();
     }
 }
