@@ -51,17 +51,24 @@ public class Game : MonoBehaviour
         await foreach(var _ in UniTaskAsyncEnumerable.EveryUpdate())
         {
             UpdateCamera();
+            var xMove = 0f;
+            var zMove = 0f;
+            if (Input.GetKey(KeyCode.W)) zMove += moveAmount;
+            if (Input.GetKey(KeyCode.S)) zMove -= moveAmount;
+            if (Input.GetKey(KeyCode.D)) xMove += moveAmount;
+            if (Input.GetKey(KeyCode.A)) xMove -= moveAmount;
+            robot.transform.Translate(xMove, 0, zMove);
+            
             if (Input.GetKey(KeyCode.W) ||
                 Input.GetKey(KeyCode.A) ||
                 Input.GetKey(KeyCode.S) ||
                 Input.GetKey(KeyCode.D))
             {
-                robot.transform.position += new Vector3(
-                    (Input.GetKey(KeyCode.D) ? moveAmount : 0) + (Input.GetKey(KeyCode.A) ? -moveAmount : 0),
-                    0,
-                    (Input.GetKey(KeyCode.W) ? moveAmount : 0) + (Input.GetKey(KeyCode.S) ? -moveAmount : 0)
-                );
                 PlayRunAnimation();
+            }
+            else if (Input.GetKey(KeyCode.Escape))
+            {
+                break;
             }
             else
             {
