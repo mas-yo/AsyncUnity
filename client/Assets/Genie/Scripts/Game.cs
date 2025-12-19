@@ -21,13 +21,11 @@ public class Game : MonoBehaviour
         {
             var groundPrefab =
                 await Resources.LoadAsync<GameObject>("SimpleNaturePack/Prefabs/Ground_01");
-            Object.Instantiate(groundPrefab);
+            Instantiate(groundPrefab);
         }
         
-        var prefabRequest = Resources.LoadAsync<GameObject>("SciFiWarriorPBRHPPolyart/Prefabs/PBRCharacter");
-        await prefabRequest;
-        var prefab = (GameObject)prefabRequest.asset;
-        var robot = Object.Instantiate(prefab);
+        var robotPrefab = await Resources.LoadAsync<GameObject>("SciFiWarriorPBRHPPolyart/Prefabs/PBRCharacter");
+        var robot = (GameObject)Instantiate(robotPrefab);
         var animator = robot.GetComponentInChildren<Animator>();
         animator.Play("Run_guard_AR");//Idle_gunMiddle_AR
 
