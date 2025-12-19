@@ -4,6 +4,7 @@ using System.Threading;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
+using Genie;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
@@ -68,7 +69,11 @@ public class Game : MonoBehaviour
             }
             else if (Input.GetKey(KeyCode.Escape))
             {
-                break;
+                var pauseResult = await PauseWindow.StartAsync(token);
+                if (pauseResult.IsExit)
+                {
+                    break;
+                }
             }
             else
             {
