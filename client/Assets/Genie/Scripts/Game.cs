@@ -27,6 +27,9 @@ public class Game
         
         var robotPrefab = await Resources.LoadAsync<GameObject>("SciFiWarriorPBRHPPolyart/Prefabs/PBRCharacter");
         var robot = (GameObject)Object.Instantiate(robotPrefab);
+        robot.transform.position = new Vector3(0, 5, 0);
+        var robotRegitBody = robot.GetComponent<Rigidbody>();
+        
         var animator = robot.GetComponentInChildren<Animator>();
         animator.Play("Run_guard_AR");//Idle_gunMiddle_AR
 
@@ -58,7 +61,11 @@ public class Game
             if (Input.GetKey(KeyCode.S)) zMove -= moveAmount;
             if (Input.GetKey(KeyCode.D)) xMove += moveAmount;
             if (Input.GetKey(KeyCode.A)) xMove -= moveAmount;
-            robot.transform.Translate(xMove, 0, zMove);
+            // robot.transform.Translate(xMove, 0, zMove);
+            // robotRegitBody.linearVelocity = new Vector3(xMove, robotRegitBody.linearVelocity.y, zMove);
+            var nextPosition = robot.transform.position + new Vector3(xMove, 0, zMove);
+            robotRegitBody.MovePosition(nextPosition);
+            // robotRegitBody.AddForce(new Vector3(xMove, 0, zMove), ForceMode.Force);
             
             if (Input.GetKey(KeyCode.W) ||
                 Input.GetKey(KeyCode.A) ||
