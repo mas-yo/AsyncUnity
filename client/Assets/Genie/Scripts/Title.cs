@@ -4,7 +4,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class Title : MonoBehaviour
+public class Title
 {
     public struct Result
     {

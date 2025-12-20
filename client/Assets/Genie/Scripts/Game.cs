@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
-public class Game : MonoBehaviour
+public class Game
 {
     public struct Result
     {
@@ -22,11 +22,11 @@ public class Game : MonoBehaviour
         {
             var groundPrefab =
                 await Resources.LoadAsync<GameObject>("SimpleNaturePack/Prefabs/Ground_01");
-            Instantiate(groundPrefab);
+            Object.Instantiate(groundPrefab);
         }
         
         var robotPrefab = await Resources.LoadAsync<GameObject>("SciFiWarriorPBRHPPolyart/Prefabs/PBRCharacter");
-        var robot = (GameObject)Instantiate(robotPrefab);
+        var robot = (GameObject)Object.Instantiate(robotPrefab);
         var animator = robot.GetComponentInChildren<Animator>();
         animator.Play("Run_guard_AR");//Idle_gunMiddle_AR
 
