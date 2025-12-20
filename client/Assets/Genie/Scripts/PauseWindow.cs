@@ -22,7 +22,7 @@ namespace Genie
             var playButton = GameObject.Find("PlayButton").GetComponent<Button>();
             var exitButton = GameObject.Find("ExitButton").GetComponent<Button>();
             
-            var isExit = await WaitAndDo(token,
+            var isExit = await UniTaskUtil.WaitAndDo(token,
                 ( playButton.OnClickAsync(token), () => false),
                 ( exitButton.OnClickAsync(token), () => true)
             );
@@ -31,16 +31,6 @@ namespace Genie
             return new Result() { IsExit = isExit };
         }
         
-        public static async UniTask<T> WaitAndDo<T>(CancellationToken token, params (UniTask waitTask, Func<T> action)[] conditionsAndActions)
-        {
-            var index = await UniTask.WhenAny(conditionsAndActions.Select(x => x.waitTask).ToArray());
-            return conditionsAndActions[index].action();
-        }
-        // public static async UniTask<T> WaitAndDo<T>(CancellationToken token, params (Func<bool> condition, Func<T> action)[] conditionsAndActions)
-        // {
-        //     var index = await UniTask.WhenAny(conditionsAndActions.Select(x => UniTask.WaitUntil(() => x.condition())).ToArray());
-        //     return conditionsAndActions[index].action();
-        // }
 
     }
 }

@@ -82,10 +82,4 @@ public class Game
         }
         return new Result();
     }
-
-    public static async UniTask<T> WaitAndDo<T>(CancellationToken token, params (UniTask waitTask, Func<T> action)[] conditionsAndActions)
-    {
-        var index = await UniTask.WhenAny(conditionsAndActions.Select(x => x.waitTask).ToArray());
-        return conditionsAndActions[index].action();
-    }
 }
