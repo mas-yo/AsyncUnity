@@ -17,29 +17,27 @@ namespace Genie
             var cts = new CancellationTokenSource();
             var token = cts.Token;
             
-            var playerParameters = new Game.PlayerParameters()
-            {
-                modelPrefabPath = "SciFiWarriorPBRHPPolyart/Prefabs/PBRCharacter",
-                InitialPosition = new Vector3(0, 5, 0),
-                MoveSpeed = 0.1f,
-            };
-            var mapParameters = new Game.MapParameters()
-            {
-                GroundPrefabPath = "SimpleNaturePack/Prefabs/Ground_01",
-            };
+            
+            var masterData = await LoadMasterData.StartAsync(token);
+            
+            var characterMaster = masterData.Characters[0];
+            var stageMaster = masterData.Stages[0];
+            
             while (true)
             {
                 await Title.StartAsync(token);
-                await Game.StartAsync(mapParameters, playerParameters, token);
+                await Game.StartAsync(
+                    groundPrefabPath: stageMaster.GroundPrefabPath,
+                    playerPrefabPath: characterMaster.ModelPrefabPath,
+                    playerInitialPosition: characterMaster.InitialPosition,
+                    playerMoveSpeed: characterMaster.MoveSpeed,
+                    token: token
+                    );
             }
         
         }
 
-        // Update is called once per frame
-        void Update()
-        {
 
-        }
     }
     
 }

@@ -11,38 +11,33 @@ using Object = UnityEngine.Object;
 
 public class Game
 {
-    public record PlayerParameters
-    {
-        public string modelPrefabPath;
-        public Vector3 InitialPosition;
-        public float MoveSpeed;
-    }
-    public record MapParameters
-    {
-        public string GroundPrefabPath;
-    }
-    
     public struct Result
     {
     }
 
-    public static async UniTask<Result> StartAsync(MapParameters mapParameters, PlayerParameters playerParameters, CancellationToken token)
+    public static async UniTask<Result> StartAsync(
+        string groundPrefabPath,
+        string playerPrefabPath,
+        Vector3 playerInitialPosition,
+        float playerMoveSpeed,
+        CancellationToken token
+        )
     {
         await SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Single);
 
         {
             var groundPrefab =
-                await Resources.LoadAsync<GameObject>(mapParameters.GroundPrefabPath);
+                await Resources.LoadAsync<GameObject>(groundPrefabPath);
             Object.Instantiate(groundPrefab);
         }
         
-        var playerPrefab = await Resources.LoadAsync<GameObject>(playerParameters.modelPrefabPath);
+        var playerPrefab = await Resources.LoadAsync<GameObject>(playerPrefabPath);
         var player = (GameObject)Object.Instantiate(playerPrefab);
-        player.transform.position = playerParameters.InitialPosition;
-        var robotRegitBody = player.GetComponent<Rigidbody>();
+        player.transform.position = playerInitialPosition;
+        var playerRegitBody = player.GetComponent<Rigidbody>();
         
         var animator = player.GetComponentInChildren<Animator>();
-        animator.Play("Run_guard_AR");//Idle_gunMiddle_AR
+        animator.Play("Run_guard_AR");
 
         var cameraObj = GameObject.Find("Main Camera");
         var cameraTransform = cameraObj.transform;
@@ -75,7 +70,7 @@ public class Game
             // robot.transform.Translate(xMove, 0, zMove);
             // robotRegitBody.linearVelocity = new Vector3(xMove, robotRegitBody.linearVelocity.y, zMove);
             var nextPosition = player.transform.position + new Vector3(xMove, 0, zMove);
-            robotRegitBody.MovePosition(nextPosition);
+            playerRegitBody.MovePosition(nextPosition);
             // robotRegitBody.AddForce(new Vector3(xMove, 0, zMove), ForceMode.Force);
             
             if (Input.GetKey(KeyCode.W) ||
