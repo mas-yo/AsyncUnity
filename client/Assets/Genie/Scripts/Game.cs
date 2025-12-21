@@ -5,6 +5,7 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
 using Genie;
+using Genie.Components;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
@@ -30,55 +31,31 @@ public class Game
                 await Resources.LoadAsync<GameObject>(groundPrefabPath);
             Object.Instantiate(groundPrefab);
         }
+
+        var camera = await GameCamera.CreateAsync();
         
-        var playerPrefab = await Resources.LoadAsync<GameObject>(playerPrefabPath);
-        var player = (GameObject)Object.Instantiate(playerPrefab);
-        player.transform.position = playerInitialPosition;
-        var playerRegitBody = player.GetComponent<Rigidbody>();
+        var player = await Player.CreateAsync(playerPrefabPath, playerInitialPosition);
         
-        var animator = player.GetComponentInChildren<Animator>();
-        animator.Play("Run_guard_AR");
-
-        var cameraObj = GameObject.Find("Main Camera");
-        var cameraTransform = cameraObj.transform;
-
-        void UpdateCamera()
-        {
-            cameraTransform.position = player.transform.position + new Vector3(0, 8, -8);
-            cameraTransform.LookAt(player.transform.position + new Vector3(0, 2, 0));
-        }
-        void PlayRunAnimation()
-        {
-            animator.Play("Run_guard_AR");
-        }
-        void PlayIdleAnimation()
-        {
-            animator.Play("Idle_gunMiddle_AR");
-        }
-
         var moveAmount = 0.1f;
         
         await foreach(var _ in UniTaskAsyncEnumerable.EveryUpdate())
         {
-            UpdateCamera();
+            camera.SetTarget(player.transform);
+            
             var xMove = 0f;
             var zMove = 0f;
             if (Input.GetKey(KeyCode.W)) zMove += moveAmount;
             if (Input.GetKey(KeyCode.S)) zMove -= moveAmount;
             if (Input.GetKey(KeyCode.D)) xMove += moveAmount;
             if (Input.GetKey(KeyCode.A)) xMove -= moveAmount;
-            // robot.transform.Translate(xMove, 0, zMove);
-            // robotRegitBody.linearVelocity = new Vector3(xMove, robotRegitBody.linearVelocity.y, zMove);
-            var nextPosition = player.transform.position + new Vector3(xMove, 0, zMove);
-            playerRegitBody.MovePosition(nextPosition);
-            // robotRegitBody.AddForce(new Vector3(xMove, 0, zMove), ForceMode.Force);
+            player.Move(new Vector3(xMove, 0, zMove));
             
             if (Input.GetKey(KeyCode.W) ||
                 Input.GetKey(KeyCode.A) ||
                 Input.GetKey(KeyCode.S) ||
                 Input.GetKey(KeyCode.D))
             {
-                PlayRunAnimation();
+                player.PlayRunAnimation();
             }
             else if (Input.GetKey(KeyCode.Escape))
             {
@@ -90,8 +67,9 @@ public class Game
             }
             else
             {
-                PlayIdleAnimation();
+                player.PlayIdleAnimation();
             }
+            
         }
         return new Result();
     }
