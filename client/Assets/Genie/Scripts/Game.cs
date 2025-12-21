@@ -11,26 +11,37 @@ using Object = UnityEngine.Object;
 
 public class Game
 {
+    public record PlayerParameters
+    {
+        public string modelPrefabPath;
+        public Vector3 InitialPosition;
+        public float MoveSpeed;
+    }
+    public record MapParameters
+    {
+        public string GroundPrefabPath;
+    }
+    
     public struct Result
     {
     }
 
-    public static async UniTask<Result> StartAsync(CancellationToken token)
+    public static async UniTask<Result> StartAsync(MapParameters mapParameters, PlayerParameters playerParameters, CancellationToken token)
     {
         await SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Single);
 
         {
             var groundPrefab =
-                await Resources.LoadAsync<GameObject>("SimpleNaturePack/Prefabs/Ground_01");
+                await Resources.LoadAsync<GameObject>(mapParameters.GroundPrefabPath);
             Object.Instantiate(groundPrefab);
         }
         
-        var robotPrefab = await Resources.LoadAsync<GameObject>("SciFiWarriorPBRHPPolyart/Prefabs/PBRCharacter");
-        var robot = (GameObject)Object.Instantiate(robotPrefab);
-        robot.transform.position = new Vector3(0, 5, 0);
-        var robotRegitBody = robot.GetComponent<Rigidbody>();
+        var playerPrefab = await Resources.LoadAsync<GameObject>(playerParameters.modelPrefabPath);
+        var player = (GameObject)Object.Instantiate(playerPrefab);
+        player.transform.position = playerParameters.InitialPosition;
+        var robotRegitBody = player.GetComponent<Rigidbody>();
         
-        var animator = robot.GetComponentInChildren<Animator>();
+        var animator = player.GetComponentInChildren<Animator>();
         animator.Play("Run_guard_AR");//Idle_gunMiddle_AR
 
         var cameraObj = GameObject.Find("Main Camera");
@@ -38,8 +49,8 @@ public class Game
 
         void UpdateCamera()
         {
-            cameraTransform.position = robot.transform.position + new Vector3(0, 8, -8);
-            cameraTransform.LookAt(robot.transform.position + new Vector3(0, 2, 0));
+            cameraTransform.position = player.transform.position + new Vector3(0, 8, -8);
+            cameraTransform.LookAt(player.transform.position + new Vector3(0, 2, 0));
         }
         void PlayRunAnimation()
         {
@@ -63,7 +74,7 @@ public class Game
             if (Input.GetKey(KeyCode.A)) xMove -= moveAmount;
             // robot.transform.Translate(xMove, 0, zMove);
             // robotRegitBody.linearVelocity = new Vector3(xMove, robotRegitBody.linearVelocity.y, zMove);
-            var nextPosition = robot.transform.position + new Vector3(xMove, 0, zMove);
+            var nextPosition = player.transform.position + new Vector3(xMove, 0, zMove);
             robotRegitBody.MovePosition(nextPosition);
             // robotRegitBody.AddForce(new Vector3(xMove, 0, zMove), ForceMode.Force);
             
