@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Genie.Components
@@ -7,6 +8,15 @@ namespace Genie.Components
     {
         private Animator _animator;
         private Collider _collider;
+
+        public async static UniTask<Mushroom> CreateAsync(string prefabPath, Vector3 position)
+        {
+            var prefab = await Resources.LoadAsync<GameObject>(prefabPath);
+            var obj = (GameObject)Instantiate(prefab);
+            
+            obj.transform.position = position;
+            return obj.GetComponent<Mushroom>();
+        }
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {

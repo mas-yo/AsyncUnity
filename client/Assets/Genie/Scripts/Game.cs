@@ -35,6 +35,7 @@ public class Game
         var camera = await GameCamera.CreateAsync();
         
         var player = await Player.CreateAsync(playerPrefabPath, playerInitialPosition);
+        var mushroom = await Mushroom.CreateAsync("SimpleNaturePack/Prefabs/Mushroom_02", new Vector3(1f, 0.8f, 1f));
         
         var moveAmount = 0.1f;
         
