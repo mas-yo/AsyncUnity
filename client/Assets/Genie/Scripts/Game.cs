@@ -43,7 +43,10 @@ public class Game
                 await Mushroom.CreateAsync(param.prefabPath, param.position)
             )
         );
-        
+
+        var gameHud = await GameHud.CreateAsync();
+
+        var score = 0;
         var moveAmount = 0.1f;
         
         await foreach(var _ in UniTaskAsyncEnumerable.EveryUpdate())
@@ -55,6 +58,8 @@ public class Game
                     if (collision.gameObject == player.gameObject)
                     {
                         mushroom.PlayDisappearAnimation();
+                        score += 10;
+                        gameHud.SetScore(score);
                     }
                 }
             }
