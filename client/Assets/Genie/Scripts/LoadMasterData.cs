@@ -26,6 +26,13 @@ namespace Genie
                         InitialPosition = new Vector3(0f, 1f, 0f), MoveSpeed = 0.1f 
                     },
                 },
+                Items = new ItemMaster[]
+                {
+                    new ItemMaster() { Code = 1, prefabPath = "SimpleNaturePack/Prefabs/Mushroom_02", position = new Vector3(1f, 1f, 1f)},
+                    new ItemMaster() { Code = 2, prefabPath = "SimpleNaturePack/Prefabs/Mushroom_02", position = new Vector3(2f, 1f, 0f)},
+                    new ItemMaster() { Code = 3, prefabPath = "SimpleNaturePack/Prefabs/Mushroom_02", position = new Vector3(1f, 1f, 2f)},
+                    
+                }
             };
             // Simulate loading master data
             await UniTask.Delay(1000, cancellationToken: token);

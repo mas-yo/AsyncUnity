@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ namespace Genie.Components
     {
         private Animator _animator;
         private Collider _collider;
+        private Queue<Collision> _collisionQueue = new Queue<Collision>();
 
         public async static UniTask<Mushroom> CreateAsync(string prefabPath, Vector3 position)
         {
@@ -23,21 +25,23 @@ namespace Genie.Components
             _animator = GetComponent<Animator>();
             _collider = GetComponent<Collider>();
         }
-
-        // Update is called once per frame
-        void Update()
-        {
         
+        public IEnumerable<Collision> DequeueCollisions()
+        {
+            while (_collisionQueue.Count > 0)
+            {
+                yield return _collisionQueue.Dequeue();
+            }
         }
 
+        public void PlayDisappearAnimation()
+        {
+            _animator.Play("Disappear");
+        }
         private void OnCollisionEnter(Collision other)
         {
-            if (other.gameObject.name == "Player")
-            {
-                _collider.enabled = false;
-                _animator.Play("Disappear");
-                Destroy(gameObject, 1.0f);
-            }
+            _collisionQueue.Enqueue(other);
+            _collider.enabled = false;
         }
     }
     

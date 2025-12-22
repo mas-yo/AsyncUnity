@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -31,6 +32,7 @@ namespace Genie
                     playerPrefabPath: characterMaster.ModelPrefabPath,
                     playerInitialPosition: characterMaster.InitialPosition,
                     playerMoveSpeed: characterMaster.MoveSpeed,
+                    mushRoomParams: masterData.Items.Select(x => (x.prefabPath, x.position)).ToArray(),
                     token: token
                     );
             }

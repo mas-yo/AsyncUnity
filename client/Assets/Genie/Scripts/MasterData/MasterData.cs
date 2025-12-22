@@ -4,5 +4,6 @@
     {
         public CharacterMaster[] Characters;
         public StageMaster[] Stages;
+        public ItemMaster[] Items;
     }
 }

@@ -21,6 +21,7 @@ public class Game
         string playerPrefabPath,
         Vector3 playerInitialPosition,
         float playerMoveSpeed,
+        (string prefabPath, Vector3 position)[] mushRoomParams,
         CancellationToken token
         )
     {
@@ -35,12 +36,29 @@ public class Game
         var camera = await GameCamera.CreateAsync();
         
         var player = await Player.CreateAsync(playerPrefabPath, playerInitialPosition);
-        var mushroom = await Mushroom.CreateAsync("SimpleNaturePack/Prefabs/Mushroom_02", new Vector3(1f, 0.8f, 1f));
+        // var mushroom = await Mushroom.CreateAsync("SimpleNaturePack/Prefabs/Mushroom_02", new Vector3(1f, 0.8f, 1f));
+        
+        var mushrooms = await UniTask.WhenAll(
+            mushRoomParams.Select(async param =>
+                await Mushroom.CreateAsync(param.prefabPath, param.position)
+            )
+        );
         
         var moveAmount = 0.1f;
         
         await foreach(var _ in UniTaskAsyncEnumerable.EveryUpdate())
         {
+            foreach (var mushroom in mushrooms)
+            {
+                foreach (var collision in mushroom.DequeueCollisions())
+                {
+                    if (collision.gameObject == player.gameObject)
+                    {
+                        mushroom.PlayDisappearAnimation();
+                    }
+                }
+            }
+            
             camera.SetTarget(player.transform);
             
             var xMove = 0f;
