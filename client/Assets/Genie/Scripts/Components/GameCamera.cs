@@ -14,7 +14,7 @@ namespace Genie.Components
         
         public void SetTarget(Transform target)
         {
-            transform.position = target.position + new Vector3(0, 8, -8);
+            transform.position = target.position + new Vector3(0, 16, -8);
             transform.LookAt(target.position + new Vector3(0, 2, 0));
         }
         

@@ -12,6 +12,7 @@ namespace Genie.Components
         {
             var prefab = await Resources.LoadAsync<GameObject>(prefabPath);
             var obj = (GameObject)Object.Instantiate(prefab);
+            obj.name = "Player";
             obj.transform.position = initialPosition;
             return obj.GetComponent<Player>();
         }
