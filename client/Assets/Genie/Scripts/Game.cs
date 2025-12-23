@@ -55,7 +55,7 @@ public class Game
             {
                 foreach (var collision in mushroom.DequeueCollisions())
                 {
-                    if (collision.gameObject == player.gameObject)
+                    if (player.IsSame(collision.gameObject))
                     {
                         mushroom.PlayDisappearAnimation();
                         score += 10;
@@ -64,7 +64,7 @@ public class Game
                 }
             }
             
-            camera.SetTarget(player.transform);
+            camera.SetTarget(player.Position);
             
             var xMove = 0f;
             var zMove = 0f;

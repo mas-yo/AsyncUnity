@@ -12,10 +12,10 @@ namespace Genie.Components
             return obj.GetComponent<GameCamera>();
         }
         
-        public void SetTarget(Transform target)
+        public void SetTarget(Vector3 target)
         {
-            transform.position = target.position + new Vector3(0, 16, -8);
-            transform.LookAt(target.position + new Vector3(0, 2, 0));
+            transform.position = target + new Vector3(0, 16, -8);
+            transform.LookAt(target + new Vector3(0, 2, 0));
         }
         
     }
