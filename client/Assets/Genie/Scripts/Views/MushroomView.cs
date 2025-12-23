@@ -17,16 +17,21 @@ namespace Genie.Components
         {
             var prefab = await Resources.LoadAsync<GameObject>(prefabPath);
             var obj = (GameObject)Object.Instantiate(prefab);
-            
+
+            var collider = obj.GetComponent<Collider>();
             var collisionQueue = new Queue<Collision>();
             obj.GetAsyncCollisionEnterTrigger()
-                .Subscribe(collision => collisionQueue.Enqueue(collision))
+                .Subscribe(collision =>
+                {
+                    collider.enabled = false;
+                    collisionQueue.Enqueue(collision);
+                })
                 .AddTo(token);
             
             obj.transform.position = position;
             return new MushroomView(
                 obj.GetComponent<Animator>(),
-                obj.GetComponent<Collider>(),
+                collider,
                 collisionQueue
             );
         }
