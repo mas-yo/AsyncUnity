@@ -27,6 +27,8 @@ public class Game
     {
         await SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Single);
 
+        var loadingWindow = await LoadingWindow.StartAsync(token);
+
         {
             var groundPrefab =
                 await Resources.LoadAsync<GameObject>(groundPrefabPath);
@@ -45,6 +47,10 @@ public class Game
         );
 
         var gameHud = await GameHud.CreateAsync();
+
+        await UniTask.Delay(1000);
+        
+        loadingWindow.Close();
 
         var score = 0;
         
