@@ -23,7 +23,8 @@ namespace Genie
                         Code = 1, 
                         Name = "Hero", 
                         ModelPrefabPath = "SciFiWarriorPBRHPPolyart/Prefabs/PBRCharacter", 
-                        InitialPosition = new Vector3(0f, 1f, 0f), MoveSpeed = 0.1f 
+                        InitialPosition = new Vector3(0f, 1f, 0f),
+                        MoveSpeed = 0.1f 
                     },
                 },
                 Items = new ItemMaster[]

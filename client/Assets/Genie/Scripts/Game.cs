@@ -47,7 +47,6 @@ public class Game
         var gameHud = await GameHud.CreateAsync();
 
         var score = 0;
-        var moveAmount = 0.1f;
         
         await foreach(var _ in UniTaskAsyncEnumerable.EveryUpdate())
         {
@@ -68,10 +67,10 @@ public class Game
             
             var xMove = 0f;
             var zMove = 0f;
-            if (Input.GetKey(KeyCode.W)) zMove += moveAmount;
-            if (Input.GetKey(KeyCode.S)) zMove -= moveAmount;
-            if (Input.GetKey(KeyCode.D)) xMove += moveAmount;
-            if (Input.GetKey(KeyCode.A)) xMove -= moveAmount;
+            if (Input.GetKey(KeyCode.W)) zMove += playerMoveSpeed;
+            if (Input.GetKey(KeyCode.S)) zMove -= playerMoveSpeed;
+            if (Input.GetKey(KeyCode.D)) xMove += playerMoveSpeed;
+            if (Input.GetKey(KeyCode.A)) xMove -= playerMoveSpeed;
             player.Move(new Vector3(xMove, 0, zMove));
             
             if (Input.GetKey(KeyCode.W) ||
