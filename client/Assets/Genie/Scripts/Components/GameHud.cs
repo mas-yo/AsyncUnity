@@ -4,21 +4,20 @@ using UnityEngine.UI;
 
 namespace Genie.Components
 {
-    public class GameHud : MonoBehaviour
+    public class GameHud
     {
         private Text _scoreText;
         
         public static async UniTask<GameHud> CreateAsync()
         {
             var prefab = await Resources.LoadAsync<GameObject>("GameHud/GameHud");
-            var obj = (GameObject)Instantiate(prefab);  
-            return obj.GetComponent<GameHud>();
+            var obj = (GameObject)Object.Instantiate(prefab);
+            
+            return new GameHud(obj.transform.Find("Canvas/Score").GetComponent<Text>());
         }
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
+        private GameHud(Text scoreText)
         {
-            _scoreText = transform.Find("Canvas/Score").GetComponent<Text>();// GetComponentInChildren<Text>();
-        
+            _scoreText = scoreText; // transform.Find("Canvas/Score").GetComponent<Text>();// GetComponentInChildren<Text>();
         }
         
         public void SetScore(int score)
@@ -26,11 +25,6 @@ namespace Genie.Components
             _scoreText.text = $"Score: {score}";
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
     }
     
 }

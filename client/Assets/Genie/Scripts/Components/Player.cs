@@ -26,7 +26,7 @@ namespace Genie.Components
             return new Player(transform, animator, rigidbody);
         }
 
-        public Player(Transform transform, Animator animator, Rigidbody rigidbody)
+        private Player(Transform transform, Animator animator, Rigidbody rigidbody)
         {
             _transform = transform;
             _animator = animator;

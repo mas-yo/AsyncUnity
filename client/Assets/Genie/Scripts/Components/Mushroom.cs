@@ -1,29 +1,40 @@
-using System;
 using System.Collections.Generic;
+using System.Threading;
 using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks.Linq;
+using Cysharp.Threading.Tasks.Triggers;
 using UnityEngine;
 
 namespace Genie.Components
 {
-    public class Mushroom : MonoBehaviour
+    public class Mushroom
     {
-        private Animator _animator;
-        private Collider _collider;
-        private Queue<Collision> _collisionQueue = new Queue<Collision>();
+        private readonly Animator _animator;
+        private readonly Collider _collider;
+        private readonly Queue<Collision> _collisionQueue;
 
-        public async static UniTask<Mushroom> CreateAsync(string prefabPath, Vector3 position)
+        public static async UniTask<Mushroom> CreateAsync(string prefabPath, Vector3 position, CancellationToken token)
         {
             var prefab = await Resources.LoadAsync<GameObject>(prefabPath);
-            var obj = (GameObject)Instantiate(prefab);
+            var obj = (GameObject)Object.Instantiate(prefab);
+            
+            var collisionQueue = new Queue<Collision>();
+            obj.GetAsyncCollisionEnterTrigger()
+                .Subscribe(collision => collisionQueue.Enqueue(collision))
+                .AddTo(token);
             
             obj.transform.position = position;
-            return obj.GetComponent<Mushroom>();
+            return new Mushroom(
+                obj.GetComponent<Animator>(),
+                obj.GetComponent<Collider>(),
+                collisionQueue
+            );
         }
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
+        private Mushroom(Animator animator, Collider collider, Queue<Collision> collisionQueue)
         {
-            _animator = GetComponent<Animator>();
-            _collider = GetComponent<Collider>();
+            _animator = animator;
+            _collider = collider;
+            _collisionQueue = collisionQueue;
         }
         
         public IEnumerable<Collision> DequeueCollisions()
@@ -38,11 +49,11 @@ namespace Genie.Components
         {
             _animator.Play("Disappear");
         }
-        private void OnCollisionEnter(Collision other)
-        {
-            _collisionQueue.Enqueue(other);
-            _collider.enabled = false;
-        }
+        // private void OnCollisionEnter(Collision other)
+        // {
+        //     _collisionQueue.Enqueue(other);
+        //     _collider.enabled = false;
+        // }
     }
     
 }

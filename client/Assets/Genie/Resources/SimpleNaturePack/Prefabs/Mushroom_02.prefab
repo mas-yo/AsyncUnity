@@ -101,7 +101,6 @@ GameObject:
   - component: {fileID: 5440707293445741943}
   - component: {fileID: 2572748512188004591}
   - component: {fileID: 4577972806721144212}
-  - component: {fileID: 947330982307660750}
   - component: {fileID: 2111510528530654313}
   m_Layer: 0
   m_Name: Mushroom_02
@@ -171,18 +170,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.1
   m_Center: {x: 0, y: 0.1, z: 0}
---- !u!114 &947330982307660750
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5440707293445505367}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5a5785e643efb341aa329d28135f50e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Mushroom
 --- !u!95 &2111510528530654313
 Animator:
   serializedVersion: 7

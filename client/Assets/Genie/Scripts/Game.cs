@@ -40,7 +40,7 @@ public class Game
         
         var mushrooms = await UniTask.WhenAll(
             mushRoomParams.Select(async param =>
-                await Mushroom.CreateAsync(param.prefabPath, param.position)
+                await Mushroom.CreateAsync(param.prefabPath, param.position, token)
             )
         );
 
