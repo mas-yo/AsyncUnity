@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Genie.Components
 {
-    public class Player
+    public class PlayerView
     {
         private readonly Transform _transform;
         private readonly Animator _animator;
@@ -13,7 +13,7 @@ namespace Genie.Components
         public Vector3 Position => _transform.position;
         
         
-        public static async UniTask<Player> CreateAsync(string prefabPath, Vector3 initialPosition)
+        public static async UniTask<PlayerView> CreateAsync(string prefabPath, Vector3 initialPosition)
         {
             var prefab = await Resources.LoadAsync<GameObject>(prefabPath);
             var obj = (GameObject)Object.Instantiate(prefab);
@@ -23,10 +23,10 @@ namespace Genie.Components
             var animator = obj.GetComponent<Animator>();
             var rigidbody = obj.GetComponent<Rigidbody>();
             
-            return new Player(transform, animator, rigidbody);
+            return new PlayerView(transform, animator, rigidbody);
         }
 
-        private Player(Transform transform, Animator animator, Rigidbody rigidbody)
+        private PlayerView(Transform transform, Animator animator, Rigidbody rigidbody)
         {
             _transform = transform;
             _animator = animator;

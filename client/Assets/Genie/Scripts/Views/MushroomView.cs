@@ -7,13 +7,13 @@ using UnityEngine;
 
 namespace Genie.Components
 {
-    public class Mushroom
+    public class MushroomView
     {
         private readonly Animator _animator;
         private readonly Collider _collider;
         private readonly Queue<Collision> _collisionQueue;
 
-        public static async UniTask<Mushroom> CreateAsync(string prefabPath, Vector3 position, CancellationToken token)
+        public static async UniTask<MushroomView> CreateAsync(string prefabPath, Vector3 position, CancellationToken token)
         {
             var prefab = await Resources.LoadAsync<GameObject>(prefabPath);
             var obj = (GameObject)Object.Instantiate(prefab);
@@ -24,13 +24,13 @@ namespace Genie.Components
                 .AddTo(token);
             
             obj.transform.position = position;
-            return new Mushroom(
+            return new MushroomView(
                 obj.GetComponent<Animator>(),
                 obj.GetComponent<Collider>(),
                 collisionQueue
             );
         }
-        private Mushroom(Animator animator, Collider collider, Queue<Collision> collisionQueue)
+        private MushroomView(Animator animator, Collider collider, Queue<Collision> collisionQueue)
         {
             _animator = animator;
             _collider = collider;

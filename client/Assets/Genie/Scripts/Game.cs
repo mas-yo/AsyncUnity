@@ -35,12 +35,12 @@ public class Game
 
         var camera = await GameCamera.CreateAsync();
         
-        var player = await Player.CreateAsync(playerPrefabPath, playerInitialPosition);
+        var player = await PlayerView.CreateAsync(playerPrefabPath, playerInitialPosition);
         // var mushroom = await Mushroom.CreateAsync("SimpleNaturePack/Prefabs/Mushroom_02", new Vector3(1f, 0.8f, 1f));
         
         var mushrooms = await UniTask.WhenAll(
             mushRoomParams.Select(async param =>
-                await Mushroom.CreateAsync(param.prefabPath, param.position, token)
+                await MushroomView.CreateAsync(param.prefabPath, param.position, token)
             )
         );
 
