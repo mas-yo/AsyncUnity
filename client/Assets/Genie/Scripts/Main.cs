@@ -22,12 +22,17 @@ namespace Genie
             var masterData = await LoadMasterData.StartAsync(token);
             
             var characterMaster = masterData.Characters[0];
-            var stageMaster = masterData.Stages[0];
+            // var stageMaster = masterData.Stages[0];
+            var apiGate = new ApiGate();
             
             while (true)
             {
-                await Title.StartAsync(token);
+                var titleResult = await Title.StartAsync(apiGate, token);
+                var stageMaster = masterData.Stages.First(x => x.Code == titleResult.UserInfo.CurrentStageCode);
+                
                 await Game.StartAsync(
+                    apiGate,
+                    stageMaster.Code,
                     groundPrefabPath: stageMaster.GroundPrefabPath,
                     playerPrefabPath: characterMaster.ModelPrefabPath,
                     playerInitialPosition: characterMaster.InitialPosition,

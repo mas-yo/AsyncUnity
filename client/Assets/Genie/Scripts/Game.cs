@@ -17,6 +17,8 @@ public class Game
     }
 
     public static async UniTask<Result> StartAsync(
+        ApiGate apiGate,
+        long stageCode,
         string groundPrefabPath,
         string playerPrefabPath,
         Vector3 playerInitialPosition,
@@ -65,6 +67,7 @@ public class Game
                         mushroom.PlayDisappearAnimation();
                         score += 10;
                         gameHud.SetScore(score);
+                        apiGate.SaveScoreAsync(stageCode, score, token).Forget();
                     }
                 }
             }
