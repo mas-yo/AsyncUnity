@@ -6,15 +6,16 @@ using Genie.Scenes;
 
 namespace Genie
 {
-    public class Main : MonoBehaviour
+    public class Main
     {
         // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        private static void StartMainLoop()
         {
             MainLoopAsync().Forget();
         }
     
-        private async UniTask MainLoopAsync()
+        private static async UniTask MainLoopAsync()
         {
             var cts = new CancellationTokenSource();
             var token = cts.Token;
