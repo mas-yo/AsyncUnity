@@ -5,7 +5,7 @@ using Cysharp.Threading.Tasks.Linq;
 using Cysharp.Threading.Tasks.Triggers;
 using UnityEngine;
 
-namespace Genie.Components
+namespace Genie.Views
 {
     public class MushroomView
     {

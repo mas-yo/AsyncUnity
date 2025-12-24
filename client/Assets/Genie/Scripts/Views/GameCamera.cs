@@ -1,7 +1,7 @@
 ﻿using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-namespace Genie.Components
+namespace Genie.Views
 {
     public class GameCamera
     {

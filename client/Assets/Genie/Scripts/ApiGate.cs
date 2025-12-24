@@ -20,7 +20,6 @@ namespace Genie
         public async UniTask SaveScoreAsync(long stageCode, int score, CancellationToken token)
         {
             await UniTask.Delay(500);
-            throw new Exception("dummy");
         }
     }
 }

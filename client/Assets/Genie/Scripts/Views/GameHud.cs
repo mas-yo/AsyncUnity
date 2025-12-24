@@ -2,7 +2,7 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using UnityEngine.UI;
 
-namespace Genie.Components
+namespace Genie.Views
 {
     public class GameHud
     {

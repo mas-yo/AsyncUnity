@@ -2,7 +2,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace Genie.Components
+namespace Genie.Views
 {
     public class PlayerView
     {

@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using Genie.Scenes;
 
 namespace Genie
 {
@@ -27,10 +28,10 @@ namespace Genie
             
             while (true)
             {
-                var titleResult = await Title.StartAsync(apiGate, token);
+                var titleResult = await TitleScene.StartAsync(apiGate, token);
                 var stageMaster = masterData.Stages.First(x => x.Code == titleResult.UserInfo.CurrentStageCode);
                 
-                await Game.StartAsync(
+                await GameScene.StartAsync(
                     apiGate,
                     stageMaster.Code,
                     groundPrefabPath: stageMaster.GroundPrefabPath,
