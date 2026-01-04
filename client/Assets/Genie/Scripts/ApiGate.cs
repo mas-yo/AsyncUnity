@@ -2,6 +2,7 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Genie.Protocols;
+using UnityEditor.PackageManager.Requests;
 
 namespace Genie
 {
@@ -10,6 +11,13 @@ namespace Genie
         public async UniTask<UserInfo> LoginAsync()
         {
             await UniTask.Delay(1000);
+            
+            // var response = await RequestWebApi.DoAsync<Login.Request, Login.Response>(new Login.Request()
+            // {
+            //     dummy = "dummy"
+            // });
+            
+            // var userInfo = new UserInfo() { UserId = "" };
             return new UserInfo
             {
                 UserId = "user_12345",

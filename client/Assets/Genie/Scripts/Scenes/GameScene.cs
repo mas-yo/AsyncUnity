@@ -94,7 +94,7 @@ namespace Genie.Scenes
                 }
                 else if (Input.GetKey(KeyCode.Escape))
                 {
-                    var pauseResult = await PauseWindow.StartAsync(token);
+                    var pauseResult = await PauseWindow.ShowAsync(token);
                     if (pauseResult.IsExit)
                     {
                         break;

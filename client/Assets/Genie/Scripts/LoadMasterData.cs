@@ -7,7 +7,7 @@ namespace Genie
 {
     public static class LoadMasterData
     {
-        public static async UniTask<MasterData.MasterData> StartAsync(CancellationToken token)
+        public static async UniTask<MasterData.MasterData> DoAsync(CancellationToken token)
         {
             var masterData = new MasterData.MasterData()
             {

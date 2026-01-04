@@ -15,7 +15,7 @@ namespace Genie.Windows
         {
             public bool IsExit;
         }
-        public static async UniTask<Result> StartAsync(CancellationToken token)
+        public static async UniTask<Result> ShowAsync(CancellationToken token)
         {
             var pauseWindowPrefab = await Resources.LoadAsync<GameObject>("PauseWindow/PauseWindow");
             var pauseWindowObj = (GameObject)Object.Instantiate(pauseWindowPrefab);

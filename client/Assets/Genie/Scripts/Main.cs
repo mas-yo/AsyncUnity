@@ -21,7 +21,7 @@ namespace Genie
             var token = cts.Token;
             
             
-            var masterData = await LoadMasterData.StartAsync(token);
+            var masterData = await LoadMasterData.DoAsync(token);
             
             var characterMaster = masterData.Characters[0];
             // var stageMaster = masterData.Stages[0];
