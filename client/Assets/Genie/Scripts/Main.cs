@@ -29,7 +29,7 @@ namespace Genie
             
             while (true)
             {
-                var titleResult = await TitleScene.StartAsync(apiGate, token);
+                var titleResult = await TitleScene.StartAsync("https://genie.co.jp/", "1.0.0", token);
                 var stageMaster = masterData.Stages.First(x => x.Code == titleResult.UserInfo.CurrentStageCode);
                 
                 await GameScene.StartAsync(

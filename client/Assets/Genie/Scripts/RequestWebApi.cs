@@ -6,23 +6,21 @@ namespace Genie
 {
     public class RequestWebApi
     {
-        // public async static UniTask<TResponse> DoAsync<TRequest, TResponse>(string baseUri, string endPoint, TRequest request, (string key, string value)[] headers, int timeout)
-        // {
-        //     
-            // var requestBytes = Serializer.Serialize(request);
-            // var webRequest = new UnityWebRequest(baseUri + endPoint, UnityWebRequest.kHttpVerbPOST);
-            // webRequest.downloadHandler = new DownloadHandlerBuffer();
-            //
-            // webRequest.uploadHandler = new UploadHandlerRaw(requestBytes);
-            // foreach (var (key, value) in headers)
-            // {
-            //     webRequest.SetRequestHeader(key, value);
-            // }
-            //
-            // webRequest.timeout = timeout;
-            //
-            // var response = await webRequest.SendWebRequest().ToUniTask();
-        //         
-        // }
+        public static async UniTask<DownloadHandler> DoAsync(string url, byte[] requestBytes, (string key, string value)[] headers, int timeout)
+        {
+            var webRequest = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPOST);
+            webRequest.downloadHandler = new DownloadHandlerBuffer();
+            
+            webRequest.uploadHandler = new UploadHandlerRaw(requestBytes);
+            foreach (var (key, value) in headers)
+            {
+                webRequest.SetRequestHeader(key, value);
+            }
+            
+            webRequest.timeout = timeout;
+            var response = await webRequest.SendWebRequest().ToUniTask();
+            return response.downloadHandler;
+            
+        }
     }
 }
