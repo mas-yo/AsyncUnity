@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Genie.Logics;
+using Genie.MasterData;
 using UnityEngine;
 using Genie.Scenes;
 
@@ -25,6 +26,9 @@ namespace Genie
             var rows = ExcelReader.EnumerateExcelReaders(Application.persistentDataPath)
                 .SelectMany(ExcelReader.EnumerateRows);
             var masterData = MasterData.MasterData.FromDictionary(DataTableProcessor.ConvertRowsToDictionary(rows));
+
+            var test = Logics.MasterMemory.FromDictionary(DataTableProcessor.ConvertRowsToDictionary(rows));
+            var a = test.CharacterMasterTable.FindByCode(0);
             
             var characterMaster = masterData.Characters[0];
             

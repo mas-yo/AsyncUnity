@@ -1,15 +1,19 @@
 ﻿using System.Collections.Generic;
+using MasterMemory;
+using MessagePack;
 using UnityEngine;
 
 namespace Genie.MasterData
 {
+    [MemoryTable("Character"), MessagePackObject(true)]
     public record CharacterMaster
     {
-        public long Code;
-        public string Name;
-        public string ModelPrefabPath;
-        public Vector3 InitialPosition;
-        public float MoveSpeed;
+        [PrimaryKey]
+        public long Code { get; init; }
+        public string Name { get; init; }
+        public string ModelPrefabPath { get; init; }
+        public Vector3 InitialPosition { get; init; }
+        public float MoveSpeed { get; init; }
 
         public static CharacterMaster FromDictionary(IReadOnlyDictionary<string, string> dict)
         {

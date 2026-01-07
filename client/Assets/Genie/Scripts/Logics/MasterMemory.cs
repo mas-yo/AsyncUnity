@@ -1,24 +1,16 @@
-﻿
+﻿using System.Collections.Generic;
+using Genie.MasterData;
 using MasterMemory;
-using System.Collections.Generic;
-using System.Linq;
 
-[assembly: MasterMemoryGeneratorOptions(Namespace = "Genie.MasterData")]
-namespace System.Runtime.CompilerServices
+namespace Genie.Logics
 {
-    internal sealed class IsExternalInit { }
-}
-
-namespace Genie.MasterData
-{
-    public record MasterData
+    public class MasterMemory
     {
-        public CharacterMaster[] Characters;
-        public StageMaster[] Stages;
-        public ItemMaster[] Items;
-
-        public static MasterData FromDictionary(IEnumerable<(string tableName, IReadOnlyDictionary<string, string> dict)> rows)
+        public static MemoryDatabase FromDictionary(IEnumerable<(string tableName, IReadOnlyDictionary<string, string> dict)> rows)
         {
+            var builder = new DatabaseBuilder();
+
+
             var characters = new List<CharacterMaster>();
             var stages = new List<StageMaster>();
             var items = new List<ItemMaster>();
@@ -37,12 +29,12 @@ namespace Genie.MasterData
                     items.Add(ItemMaster.FromDictionary(row.dict));
                 }
             }
-            return new MasterData()
-            {
-                Characters = characters.ToArray(),
-                Stages = stages.ToArray(),
-                Items = items.ToArray(),
-            };
+
+            builder.Append(characters);
+            builder.Append(stages);
+            builder.Append(items);
+
+            return new MemoryDatabase(builder.Build());
         }
     }
 }

@@ -1,13 +1,21 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using MasterMemory;
+using MessagePack;
 
 namespace Genie.MasterData
 {
+    [MemoryTable("Item"), MessagePackObject(true)]
     public record ItemMaster
     {
-        public long Code;
-        public string PrefabPath;
-        public Vector3 Position;
+        [PrimaryKey]
+        public long Code { get; init; }
+        public string Name { get; init; }
+        public string Description { get; init; }
+        public string IconPath { get; init; }
+        public int Rarity { get; init; }
+        public string PrefabPath { get; init; }
+        public Vector3 Position { get; init; }
 
         public static ItemMaster FromDictionary(IReadOnlyDictionary<string, string> dict)
         {

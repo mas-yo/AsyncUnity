@@ -1,15 +1,19 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using MasterMemory;
+using MessagePack;
 
 namespace Genie.MasterData
 {
+    [MemoryTable("Enemy"), MessagePackObject(true)]
     public record EnemyMaster
     {
-        public long Code;
-        public string PrefabPath;
-        public float Health;
-        public float AttackPower;
-        public Vector3 InitialPosition;
+        [PrimaryKey]
+        public long Code { get; init; }
+        public string PrefabPath { get; init; }
+        public float Health { get; init; }
+        public float AttackPower { get; init; }
+        public Vector3 InitialPosition { get; init; }
 
         public static EnemyMaster FromDictionary(IReadOnlyDictionary<string, string> dict)
         {
