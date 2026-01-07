@@ -4,7 +4,7 @@ using MasterMemory;
 
 namespace Genie.Logics
 {
-    public class MasterMemoryBuilder
+    public static class MasterMemoryBuilder
     {
         public static MemoryDatabase Build(IEnumerable<(string tableName, IReadOnlyDictionary<string, string> dict)> rows)
         {
