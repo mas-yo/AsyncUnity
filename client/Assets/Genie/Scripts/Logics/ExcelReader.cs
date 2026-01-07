@@ -8,18 +8,26 @@ namespace Genie.Logics
     {
         public static IEnumerable<string[]> EnumerateRows(IExcelDataReader reader)
         {
-            do
+            try
             {
-                while (reader.Read())
+                do
                 {
-                    var row = new string[reader.FieldCount];
-                    for (int i = 0; i < reader.FieldCount; i++)
+                    while (reader.Read())
                     {
-                        row[i] = reader.GetValue(i)?.ToString() ?? string.Empty;
+                        var row = new string[reader.FieldCount];
+                        for (int i = 0; i < reader.FieldCount; i++)
+                        {
+                            row[i] = reader.GetValue(i)?.ToString() ?? string.Empty;
+                        }
+
+                        yield return row;
                     }
-                    yield return row;
-                }
-            } while (reader.NextResult());
+                } while (reader.NextResult());
+            }
+            finally
+            {
+                reader.Dispose();
+            }
         }
 
         public static IEnumerable<IExcelDataReader> EnumerateExcelReaders(string directoryPath)
