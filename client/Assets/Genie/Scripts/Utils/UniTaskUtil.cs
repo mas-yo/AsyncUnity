@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 
-namespace Genie
+namespace Genie.Utils
 {
     public static class UniTaskUtil
     {

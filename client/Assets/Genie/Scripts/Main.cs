@@ -27,7 +27,6 @@ namespace Genie
             var masterData = MasterData.MasterData.FromDictionary(DataTableProcessor.ConvertRowsToDictionary(rows));
             
             var characterMaster = masterData.Characters[0];
-            var apiGate = new ApiGate();
             
             while (true)
             {
@@ -35,7 +34,6 @@ namespace Genie
                 var stageMaster = masterData.Stages.First(x => x.Code == titleResult.UserInfo.CurrentStageCode);
                 
                 await GameScene.StartAsync(
-                    apiGate,
                     stageMaster.Code,
                     groundPrefabPath: stageMaster.GroundPrefabPath,
                     playerPrefabPath: characterMaster.ModelPrefabPath,

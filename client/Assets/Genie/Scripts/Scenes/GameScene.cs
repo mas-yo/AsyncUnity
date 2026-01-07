@@ -20,7 +20,6 @@ namespace Genie.Scenes
         }
 
         public static async UniTask<Result> StartAsync(
-            ApiGate apiGate,
             long stageCode,
             string groundPrefabPath,
             string playerPrefabPath,
@@ -70,7 +69,6 @@ namespace Genie.Scenes
                             mushroom.PlayDisappearAnimation();
                             score += 10;
                             gameHud.SetScore(score);
-                            apiGate.SaveScoreAsync(stageCode, score, token).Forget();
                         }
                     }
                 }
