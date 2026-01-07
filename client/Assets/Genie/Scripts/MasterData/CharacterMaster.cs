@@ -20,7 +20,7 @@ namespace Genie.MasterData
                 Name = dict["Name"],
                 ModelPrefabPath = dict["ModelPrefabPath"],
                 InitialPosition = new Vector3(float.Parse(dict["InitialPosition.x"]), float.Parse(dict["InitialPosition.y"]), float.Parse(dict["InitialPosition.z"])),
-                MoveSpeed = float.Parse((string)dict["MoveSpeed"]),
+                MoveSpeed = float.Parse(dict["MoveSpeed"]),
             };
         }
     }
