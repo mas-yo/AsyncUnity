@@ -29,9 +29,9 @@ namespace Genie
                 },
                 Items = new ItemMaster[]
                 {
-                    new ItemMaster() { Code = 1, prefabPath = "SimpleNaturePack/Prefabs/Mushroom_02", position = new Vector3(1f, 1f, 1f)},
-                    new ItemMaster() { Code = 2, prefabPath = "SimpleNaturePack/Prefabs/Mushroom_02", position = new Vector3(2f, 1f, 0f)},
-                    new ItemMaster() { Code = 3, prefabPath = "SimpleNaturePack/Prefabs/Mushroom_02", position = new Vector3(1f, 1f, 2f)},
+                    new ItemMaster() { Code = 1, PrefabPath = "SimpleNaturePack/Prefabs/Mushroom_02", Position = new Vector3(1f, 1f, 1f)},
+                    new ItemMaster() { Code = 2, PrefabPath = "SimpleNaturePack/Prefabs/Mushroom_02", Position = new Vector3(2f, 1f, 0f)},
+                    new ItemMaster() { Code = 3, PrefabPath = "SimpleNaturePack/Prefabs/Mushroom_02", Position = new Vector3(1f, 1f, 2f)},
                     
                 }
             };

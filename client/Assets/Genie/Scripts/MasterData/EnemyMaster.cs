@@ -3,23 +3,23 @@ using UnityEngine;
 
 namespace Genie.MasterData
 {
-    public record CharacterMaster
+    public record EnemyMaster
     {
         public long Code;
-        public string Name;
-        public string ModelPrefabPath;
+        public string PrefabPath;
+        public float Health;
+        public float AttackPower;
         public Vector3 InitialPosition;
-        public float MoveSpeed;
 
-        public static CharacterMaster FromDictionary(IReadOnlyDictionary<string, string> dict)
+        public static EnemyMaster FromDictionary(IReadOnlyDictionary<string, string> dict)
         {
-            return new CharacterMaster()
+            return new EnemyMaster()
             {
                 Code = long.Parse(dict["Code"]),
-                Name = dict["Name"],
-                ModelPrefabPath = dict["ModelPrefabPath"],
+                PrefabPath = dict["PrefabPath"],
+                Health = float.Parse(dict["Health"]),
+                AttackPower = float.Parse(dict["AttackPower"]),
                 InitialPosition = new Vector3(float.Parse(dict["InitialPosition.x"]), float.Parse(dict["InitialPosition.y"]), float.Parse(dict["InitialPosition.z"])),
-                MoveSpeed = float.Parse(dict["MoveSpeed"]),
             };
         }
     }

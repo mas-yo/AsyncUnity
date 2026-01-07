@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using Genie.Logics;
 using UnityEngine;
 using Genie.Scenes;
 
@@ -20,11 +22,11 @@ namespace Genie
             var cts = new CancellationTokenSource();
             var token = cts.Token;
             
-            
-            var masterData = await LoadMasterData.DoAsync(token);
+            var rows = ExcelReader.EnumerateExcelReaders(Application.persistentDataPath)
+                .SelectMany(ExcelReader.EnumerateRows);
+            var masterData = MasterData.MasterData.FromDictionary(DataTableProcessor.ConvertRowsToDictionary(rows));
             
             var characterMaster = masterData.Characters[0];
-            // var stageMaster = masterData.Stages[0];
             var apiGate = new ApiGate();
             
             while (true)
@@ -39,7 +41,7 @@ namespace Genie
                     playerPrefabPath: characterMaster.ModelPrefabPath,
                     playerInitialPosition: characterMaster.InitialPosition,
                     playerMoveSpeed: characterMaster.MoveSpeed,
-                    mushRoomParams: masterData.Items.Select(x => (x.prefabPath, x.position)).ToArray(),
+                    mushRoomParams: masterData.Items.Select(x => (prefabPath: x.PrefabPath, position: x.Position)).ToArray(),
                     token: token
                     );
             }
