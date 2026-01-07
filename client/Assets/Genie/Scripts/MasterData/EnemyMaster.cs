@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Genie.Utils;
 using UnityEngine;
 
 namespace Genie.MasterData
