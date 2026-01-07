@@ -27,7 +27,7 @@ namespace Genie
                 .SelectMany(ExcelReader.EnumerateRows);
             var masterData = MasterData.MasterData.FromDictionary(DataTableProcessor.ConvertRowsToDictionary(rows));
 
-            var test = Logics.MasterMemory.FromDictionary(DataTableProcessor.ConvertRowsToDictionary(rows));
+            var test = Logics.MasterMemoryBuilder.Build(DataTableProcessor.ConvertRowsToDictionary(rows));
             var a = test.CharacterMasterTable.FindByCode(0);
             
             var characterMaster = masterData.Characters[0];

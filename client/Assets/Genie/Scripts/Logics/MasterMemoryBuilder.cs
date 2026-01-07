@@ -4,9 +4,9 @@ using MasterMemory;
 
 namespace Genie.Logics
 {
-    public class MasterMemory
+    public class MasterMemoryBuilder
     {
-        public static MemoryDatabase FromDictionary(IEnumerable<(string tableName, IReadOnlyDictionary<string, string> dict)> rows)
+        public static MemoryDatabase Build(IEnumerable<(string tableName, IReadOnlyDictionary<string, string> dict)> rows)
         {
             var builder = new DatabaseBuilder();
 
