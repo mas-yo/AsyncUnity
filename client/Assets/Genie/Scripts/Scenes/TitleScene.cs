@@ -23,16 +23,16 @@ namespace Genie.Scenes
             var startButton = GameObject.Find("StartButton").GetComponent<Button>();
             await startButton.OnClickAsync(token);
         
-            var header = WebApi.CreateHeader("", apiVersion);
-            var requestBytes = MessagePackSerializer.Serialize(new Login.Request()
-            {
-                dummy = "dummy"
-            });
-            var downloadHandler = await WebApi.RequestAsync(apiBaseUrl + Login.endPoint, requestBytes, header, 10);
+            // var header = WebApi.CreateHeader("", apiVersion);
+            // var requestBytes = MessagePackSerializer.Serialize(new Login.Request()
+            // {
+            //     dummy = "dummy"
+            // });
+            // var downloadHandler = await WebApi.RequestAsync(apiBaseUrl + Login.endPoint, requestBytes, header, 10);
+            //
+            // var response = MessagePackSerializer.Deserialize<Login.Response>(downloadHandler.data);
             
-            var response = MessagePackSerializer.Deserialize<Login.Response>(downloadHandler.data);
-            
-            return new Result() { UserInfo = response.UserInfo };
+            return new Result() { UserInfo = new UserInfo() { UserId = "TestUser", UserName = "Test User", CurrentStageCode = 1} };
         }
     }
 }

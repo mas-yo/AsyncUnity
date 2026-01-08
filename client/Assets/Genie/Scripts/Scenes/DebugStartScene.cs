@@ -17,7 +17,7 @@ namespace Genie.Scripts.Scenes
         public static async UniTask<Result> StartAsync(CancellationToken token)
         {
             await SceneManager.LoadSceneAsync("DebugStartScene", LoadSceneMode.Single);
-            var standalponeToggle = GameObject.Find("StandalponeToggle").GetComponent<Toggle>();
+            var standalponeToggle = GameObject.Find("StandaloneToggle").GetComponent<Toggle>();
             var startButtonObj = GameObject.Find("StartButton");
             var startButton = startButtonObj.GetComponent<Button>();
             await startButton.OnClickAsync(token);
