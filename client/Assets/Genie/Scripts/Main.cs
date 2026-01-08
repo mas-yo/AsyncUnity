@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
@@ -46,10 +47,15 @@ namespace Genie
         {
             var cts = new CancellationTokenSource();
             var token = cts.Token;
+
+            var masterDataPath = Application.persistentDataPath + "/MasterData";
+            if (Directory.Exists(masterDataPath) == false)
+            {
+                masterDataPath = Application.streamingAssetsPath + "/MasterData";
+            }
             
-            var rows = ExcelReader.EnumerateExcelReaders(Application.persistentDataPath)
+            var rows = ExcelReader.EnumerateExcelReaders(masterDataPath)
                 .SelectMany(ExcelReader.EnumerateRows);
-            // var masterData = MasterData.MasterData.FromDictionary(DataTableProcessor.ConvertRowsToDictionary(rows));
 
             var masterData = Logics.MasterMemoryBuilder.Build(DataTableProcessor.ConvertRowsToDictionary(rows));
             
