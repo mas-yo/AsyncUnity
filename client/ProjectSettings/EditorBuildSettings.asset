@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Genie/Scenes/MainScene.unity
     guid: 11da8a33f7848b84688cca6d27a8f45a
   - enabled: 1
+    path: Assets/Genie/Scenes/DebugStartScene.unity
+    guid: 58bd19a6892de934f98bd5e60f0250d6
+  - enabled: 1
     path: Assets/Genie/Scenes/TitleScene.unity
     guid: e8af73ec7494a524a8e6314f76f7679f
   - enabled: 1

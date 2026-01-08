@@ -7,6 +7,7 @@ using Genie.Logics;
 using Genie.MasterData;
 using UnityEngine;
 using Genie.Scenes;
+using Genie.Scripts.Scenes;
 using MessagePack;
 using MessagePack.Formatters;
 using MessagePack.Resolvers;
@@ -63,7 +64,13 @@ namespace Genie
             
             while (true)
             {
-                var titleResult = await TitleScene.StartAsync("https://genie.co.jp/", "1.0.0", token);
+                var apiBaseUrl = "https://genie-api.example.com/";
+                #if DEBUG_START
+                var debugStartResult = await DebugStartScene.StartAsync(token);
+                apiBaseUrl = debugStartResult.ApiBaseUrl;
+                #endif
+                
+                var titleResult = await TitleScene.StartAsync(apiBaseUrl, "1.0.0", token);
                 var stageMaster = masterData.StageMasterTable.FindByCode(titleResult.UserInfo.CurrentStageCode);
                 
                 await GameScene.StartAsync(
