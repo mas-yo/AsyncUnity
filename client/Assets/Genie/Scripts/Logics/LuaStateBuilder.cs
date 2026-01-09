@@ -1,5 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using Genie.MasterData;
+using Genie.Scripts.MasterData;
 using Genie.Views;
 using Lua;
 using UnityEngine;
@@ -22,6 +23,23 @@ namespace Genie.Logics
                 return context.Return(player);
             });
             
+            luaState.Environment["PutObject"] = new LuaFunction(async (context, ct) =>
+            {
+                var objectCode = context.GetArgument<long>(0);
+                var objectMaster = masterData.ObjectMasterTable.FindByCode(objectCode);
+                switch (objectMaster.ObjectType)
+                {
+                    case ObjectType.Mushroom:
+                        var mushroomView = await MushroomView.CreateAsync(objectMaster.ModelPrefabPath, objectMaster.InitialPosition, ct);
+                        return context.Return(mushroomView);
+                    case ObjectType.Rock:
+                        var objectView = await RockView.CreateAsync(objectMaster.ModelPrefabPath, objectMaster.InitialPosition);
+                        return context.Return(objectView);
+                    default:
+                        throw new System.Exception("Unknown object type: " + objectMaster.ObjectType);
+                }
+            });
+
             return luaState;
         }
         

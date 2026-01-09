@@ -1,6 +1,8 @@
 
 function OnStart()
     player = PutPlayer(2)
+    rock = PutObject(1)
+    mushroom = PutObject(2)
     -- enemy = PutObject("Enemy", 5, 5)
 
     return player

@@ -3,11 +3,13 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
 using Cysharp.Threading.Tasks.Triggers;
+using Lua;
 using UnityEngine;
 
 namespace Genie.Views
 {
-    public class MushroomView
+    [LuaObject]
+    public partial class MushroomView
     {
         private readonly Animator _animator;
         private readonly Collider _collider;
