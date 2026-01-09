@@ -1,10 +1,12 @@
 ﻿using Cysharp.Threading.Tasks;
+using Lua;
 using TMPro;
 using UnityEngine;
 
 namespace Genie.Views
 {
-    public class PlayerView
+    [LuaObject]
+    public partial class PlayerView
     {
         private readonly Transform _transform;
         private readonly Animator _animator;

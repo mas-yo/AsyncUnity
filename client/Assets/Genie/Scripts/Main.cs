@@ -73,15 +73,22 @@ namespace Genie
                 var titleResult = await TitleScene.StartAsync(apiBaseUrl, "1.0.0", token);
                 var stageMaster = masterData.StageMasterTable.FindByCode(titleResult.UserInfo.CurrentStageCode);
                 
-                await GameScene.StartAsync(
-                    stageMaster.Code,
+                var gameResult = await GameScene.StartAsync(
+                    masterData: masterData,
+                    luaState: await LuaStateBuilder.BuildAsync(masterData),
                     groundPrefabPath: stageMaster.GroundPrefabPath,
-                    playerPrefabPath: playerMaster.ModelPrefabPath,
-                    playerInitialPosition: playerMaster.InitialPosition,
-                    playerMoveSpeed: playerMaster.MoveSpeed,
-                    mushRoomParams: masterData.ItemMasterTable.All.Select(x => (prefabPath: x.PrefabPath, position: x.Position)).ToArray(),
                     token: token
                     );
+                
+                // await GameScene.StartAsync(
+                //     stageMaster.Code,
+                //     groundPrefabPath: stageMaster.GroundPrefabPath,
+                //     playerPrefabPath: playerMaster.ModelPrefabPath,
+                //     playerInitialPosition: playerMaster.InitialPosition,
+                //     playerMoveSpeed: playerMaster.MoveSpeed,
+                //     mushRoomParams: masterData.ItemMasterTable.All.Select(x => (prefabPath: x.PrefabPath, position: x.Position)).ToArray(),
+                //     token: token
+                //     );
             }
         
         }
