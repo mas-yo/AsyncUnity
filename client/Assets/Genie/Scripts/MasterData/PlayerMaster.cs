@@ -5,8 +5,8 @@ using UnityEngine;
 
 namespace Genie.MasterData
 {
-    [MemoryTable("Character"), MessagePackObject(false)]
-    public record CharacterMaster
+    [MemoryTable("Player"), MessagePackObject(false)]
+    public record PlayerMaster
     {
         [PrimaryKey]
         [Key(0)]
@@ -20,9 +20,9 @@ namespace Genie.MasterData
         [Key(4)]
         public float MoveSpeed { get; init; }
 
-        public static CharacterMaster FromDictionary(IReadOnlyDictionary<string, string> dict)
+        public static PlayerMaster FromDictionary(IReadOnlyDictionary<string, string> dict)
         {
-            return new CharacterMaster()
+            return new PlayerMaster()
             {
                 Code = long.Parse(dict["Code"]),
                 Name = dict["Name"],

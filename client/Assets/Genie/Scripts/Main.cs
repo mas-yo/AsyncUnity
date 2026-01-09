@@ -60,7 +60,7 @@ namespace Genie
 
             var masterData = Logics.MasterMemoryBuilder.Build(DataTableProcessor.ConvertRowsToDictionary(rows));
             
-            var characterMaster = masterData.CharacterMasterTable.FindByCode(1);
+            var playerMaster = masterData.PlayerMasterTable.FindByCode(1);
             
             while (true)
             {
@@ -76,9 +76,9 @@ namespace Genie
                 await GameScene.StartAsync(
                     stageMaster.Code,
                     groundPrefabPath: stageMaster.GroundPrefabPath,
-                    playerPrefabPath: characterMaster.ModelPrefabPath,
-                    playerInitialPosition: characterMaster.InitialPosition,
-                    playerMoveSpeed: characterMaster.MoveSpeed,
+                    playerPrefabPath: playerMaster.ModelPrefabPath,
+                    playerInitialPosition: playerMaster.InitialPosition,
+                    playerMoveSpeed: playerMaster.MoveSpeed,
                     mushRoomParams: masterData.ItemMasterTable.All.Select(x => (prefabPath: x.PrefabPath, position: x.Position)).ToArray(),
                     token: token
                     );
