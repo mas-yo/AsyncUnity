@@ -49,19 +49,6 @@ namespace Genie
             var cts = new CancellationTokenSource();
             var token = cts.Token;
 
-            var masterDataPath = Application.persistentDataPath + "/MasterData";
-            if (Directory.Exists(masterDataPath) == false)
-            {
-                masterDataPath = Application.streamingAssetsPath + "/MasterData";
-            }
-            
-            var rows = ExcelReader.EnumerateExcelReaders(masterDataPath)
-                .SelectMany(ExcelReader.EnumerateRows);
-
-            var masterData = Logics.MasterMemoryBuilder.Build(DataTableProcessor.ConvertRowsToDictionary(rows));
-            
-            var characterMaster = masterData.CharacterMasterTable.FindByCode(1);
-            
             while (true)
             {
                 var apiBaseUrl = "https://genie-api.example.com/";
@@ -71,19 +58,33 @@ namespace Genie
                 #endif
                 
                 var titleResult = await TitleScene.StartAsync(apiBaseUrl, "1.0.0", token);
+                
+                var masterData = LoadMasterData(token);
                 var stageMaster = masterData.StageMasterTable.FindByCode(titleResult.UserInfo.CurrentStageCode);
                 
-                await GameScene.StartAsync(
-                    stageMaster.Code,
+                var gameResult = await GameScene.StartAsync(
+                    masterData: masterData,
+                    luaState: await LuaStateBuilder.BuildAsync(masterData),
                     groundPrefabPath: stageMaster.GroundPrefabPath,
-                    playerPrefabPath: characterMaster.ModelPrefabPath,
-                    playerInitialPosition: characterMaster.InitialPosition,
-                    playerMoveSpeed: characterMaster.MoveSpeed,
-                    mushRoomParams: masterData.ItemMasterTable.All.Select(x => (prefabPath: x.PrefabPath, position: x.Position)).ToArray(),
                     token: token
                     );
             }
         
+        }
+        
+        private static MemoryDatabase LoadMasterData(CancellationToken token)
+        {
+            var masterDataPath = Application.persistentDataPath + "/MasterData";
+            if (Directory.Exists(masterDataPath) == false)
+            {
+                masterDataPath = Application.streamingAssetsPath + "/MasterData";
+            }
+
+            var rows = ExcelReader.EnumerateExcelReaders(masterDataPath)
+                .SelectMany(ExcelReader.EnumerateRows);
+
+            var masterData = Logics.MasterMemoryBuilder.Build(DataTableProcessor.ConvertRowsToDictionary(rows));
+            return masterData;
         }
 
 

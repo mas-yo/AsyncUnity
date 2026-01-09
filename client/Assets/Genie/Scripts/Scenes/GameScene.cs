@@ -5,8 +5,10 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
 using Genie;
+using Genie.MasterData;
 using Genie.Views;
 using Genie.Windows;
+using Lua;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
@@ -20,12 +22,9 @@ namespace Genie.Scenes
         }
 
         public static async UniTask<Result> StartAsync(
-            long stageCode,
+            MemoryDatabase masterData,
+            LuaState luaState,
             string groundPrefabPath,
-            string playerPrefabPath,
-            Vector3 playerInitialPosition,
-            float playerMoveSpeed,
-            (string prefabPath, Vector3 position)[] mushRoomParams,
             CancellationToken token
             )
         {
@@ -40,15 +39,9 @@ namespace Genie.Scenes
             }
 
             var camera = await GameCamera.CreateAsync();
-            
-            var player = await PlayerView.CreateAsync(playerPrefabPath, playerInitialPosition);
-            // var mushroom = await Mushroom.CreateAsync("SimpleNaturePack/Prefabs/Mushroom_02", new Vector3(1f, 0.8f, 1f));
-            
-            var mushrooms = await UniTask.WhenAll(
-                mushRoomParams.Select(async param =>
-                    await MushroomView.CreateAsync(param.prefabPath, param.position, token)
-                )
-            );
+
+            var results = await luaState.DoStringAsync("return OnStart()");
+            var player = results[0].Read<PlayerView>();
 
             var gameHud = await GameHud.CreateAsync();
 
@@ -60,27 +53,27 @@ namespace Genie.Scenes
             
             await foreach(var _ in UniTaskAsyncEnumerable.EveryUpdate())
             {
-                foreach (var mushroom in mushrooms)
-                {
-                    foreach (var collision in mushroom.DequeueCollisions())
-                    {
-                        if (player.IsSame(collision.gameObject))
-                        {
-                            mushroom.PlayDisappearAnimation();
-                            score += 10;
-                            gameHud.SetScore(score);
-                        }
-                    }
-                }
-                
+            //     foreach (var mushroom in mushrooms)
+            //     {
+            //         foreach (var collision in mushroom.DequeueCollisions())
+            //         {
+            //             if (player.IsSame(collision.gameObject))
+            //             {
+            //                 mushroom.PlayDisappearAnimation();
+            //                 score += 10;
+            //                 gameHud.SetScore(score);
+            //             }
+            //         }
+            //     }
+            //     
                 camera.SetTarget(player.Position);
-                
+            //     
                 var xMove = 0f;
                 var zMove = 0f;
-                if (Input.GetKey(KeyCode.W)) zMove += playerMoveSpeed;
-                if (Input.GetKey(KeyCode.S)) zMove -= playerMoveSpeed;
-                if (Input.GetKey(KeyCode.D)) xMove += playerMoveSpeed;
-                if (Input.GetKey(KeyCode.A)) xMove -= playerMoveSpeed;
+                if (Input.GetKey(KeyCode.W)) zMove += 0.1f;
+                if (Input.GetKey(KeyCode.S)) zMove -= 0.1f;
+                if (Input.GetKey(KeyCode.D)) xMove += 0.1f;
+                if (Input.GetKey(KeyCode.A)) xMove -= 0.1f;
                 player.Move(new Vector3(xMove, 0, zMove));
                 
                 if (Input.GetKey(KeyCode.W) ||

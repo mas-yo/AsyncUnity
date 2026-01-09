@@ -11,14 +11,14 @@ namespace Genie.Logics
             var builder = new DatabaseBuilder();
 
 
-            var characters = new List<CharacterMaster>();
+            var characters = new List<PlayerMaster>();
             var stages = new List<StageMaster>();
             var items = new List<ItemMaster>();
             foreach (var row in rows)
             {
-                if (string.Equals(row.tableName, "CharacterMaster"))
+                if (string.Equals(row.tableName, "PlayerMaster"))
                 {
-                    characters.Add(CharacterMaster.FromDictionary(row.dict));
+                    characters.Add(PlayerMaster.FromDictionary(row.dict));
                 }
                 else if (string.Equals(row.tableName, "StageMaster"))
                 {
