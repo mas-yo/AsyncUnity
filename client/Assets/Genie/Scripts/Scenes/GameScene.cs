@@ -22,12 +22,6 @@ namespace Genie.Scenes
         }
 
         public static async UniTask<Result> StartAsync(
-            // long stageCode,
-            // string groundPrefabPath,
-            // string playerPrefabPath,
-            // Vector3 playerInitialPosition,
-            // float playerMoveSpeed,
-            // (string prefabPath, Vector3 position)[] mushRoomParams,
             MemoryDatabase masterData,
             LuaState luaState,
             string groundPrefabPath,
@@ -46,17 +40,8 @@ namespace Genie.Scenes
 
             var camera = await GameCamera.CreateAsync();
 
-            await luaState.DoStringAsync("OnStart()");
-            
-            
-            // var player = await PlayerView.CreateAsync(playerPrefabPath, playerInitialPosition);
-            // var mushroom = await Mushroom.CreateAsync("SimpleNaturePack/Prefabs/Mushroom_02", new Vector3(1f, 0.8f, 1f));
-            
-            // var mushrooms = await UniTask.WhenAll(
-            //     mushRoomParams.Select(async param =>
-            //         await MushroomView.CreateAsync(param.prefabPath, param.position, token)
-            //     )
-            // );
+            var results = await luaState.DoStringAsync("return OnStart()");
+            var player = results[0].Read<PlayerView>();
 
             var gameHud = await GameHud.CreateAsync();
 
@@ -81,24 +66,24 @@ namespace Genie.Scenes
             //         }
             //     }
             //     
-            //     camera.SetTarget(player.Position);
+                camera.SetTarget(player.Position);
             //     
-            //     var xMove = 0f;
-            //     var zMove = 0f;
-            //     if (Input.GetKey(KeyCode.W)) zMove += playerMoveSpeed;
-            //     if (Input.GetKey(KeyCode.S)) zMove -= playerMoveSpeed;
-            //     if (Input.GetKey(KeyCode.D)) xMove += playerMoveSpeed;
-            //     if (Input.GetKey(KeyCode.A)) xMove -= playerMoveSpeed;
-            //     player.Move(new Vector3(xMove, 0, zMove));
-            //     
-            //     if (Input.GetKey(KeyCode.W) ||
-            //         Input.GetKey(KeyCode.A) ||
-            //         Input.GetKey(KeyCode.S) ||
-            //         Input.GetKey(KeyCode.D))
-            //     {
-            //         player.PlayRunAnimation();
-            //     }
-                if (Input.GetKey(KeyCode.Escape))
+                var xMove = 0f;
+                var zMove = 0f;
+                if (Input.GetKey(KeyCode.W)) zMove += 0.1f;
+                if (Input.GetKey(KeyCode.S)) zMove -= 0.1f;
+                if (Input.GetKey(KeyCode.D)) xMove += 0.1f;
+                if (Input.GetKey(KeyCode.A)) xMove -= 0.1f;
+                player.Move(new Vector3(xMove, 0, zMove));
+                
+                if (Input.GetKey(KeyCode.W) ||
+                    Input.GetKey(KeyCode.A) ||
+                    Input.GetKey(KeyCode.S) ||
+                    Input.GetKey(KeyCode.D))
+                {
+                    player.PlayRunAnimation();
+                }
+                else if (Input.GetKey(KeyCode.Escape))
                 {
                     var pauseResult = await PauseWindow.ShowAsync(token);
                     if (pauseResult.IsExit)
@@ -106,11 +91,11 @@ namespace Genie.Scenes
                         break;
                     }
                 }
-            //     else
-            //     {
-            //         player.PlayIdleAnimation();
-            //     }
-            //     
+                else
+                {
+                    player.PlayIdleAnimation();
+                }
+                
             }
             return new Result();
         }

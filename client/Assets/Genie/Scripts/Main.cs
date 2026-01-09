@@ -49,19 +49,6 @@ namespace Genie
             var cts = new CancellationTokenSource();
             var token = cts.Token;
 
-            var masterDataPath = Application.persistentDataPath + "/MasterData";
-            if (Directory.Exists(masterDataPath) == false)
-            {
-                masterDataPath = Application.streamingAssetsPath + "/MasterData";
-            }
-            
-            var rows = ExcelReader.EnumerateExcelReaders(masterDataPath)
-                .SelectMany(ExcelReader.EnumerateRows);
-
-            var masterData = Logics.MasterMemoryBuilder.Build(DataTableProcessor.ConvertRowsToDictionary(rows));
-            
-            var playerMaster = masterData.PlayerMasterTable.FindByCode(1);
-            
             while (true)
             {
                 var apiBaseUrl = "https://genie-api.example.com/";
@@ -71,6 +58,8 @@ namespace Genie
                 #endif
                 
                 var titleResult = await TitleScene.StartAsync(apiBaseUrl, "1.0.0", token);
+                
+                var masterData = LoadMasterData(token);
                 var stageMaster = masterData.StageMasterTable.FindByCode(titleResult.UserInfo.CurrentStageCode);
                 
                 var gameResult = await GameScene.StartAsync(
@@ -79,18 +68,23 @@ namespace Genie
                     groundPrefabPath: stageMaster.GroundPrefabPath,
                     token: token
                     );
-                
-                // await GameScene.StartAsync(
-                //     stageMaster.Code,
-                //     groundPrefabPath: stageMaster.GroundPrefabPath,
-                //     playerPrefabPath: playerMaster.ModelPrefabPath,
-                //     playerInitialPosition: playerMaster.InitialPosition,
-                //     playerMoveSpeed: playerMaster.MoveSpeed,
-                //     mushRoomParams: masterData.ItemMasterTable.All.Select(x => (prefabPath: x.PrefabPath, position: x.Position)).ToArray(),
-                //     token: token
-                //     );
             }
         
+        }
+        
+        private static MemoryDatabase LoadMasterData(CancellationToken token)
+        {
+            var masterDataPath = Application.persistentDataPath + "/MasterData";
+            if (Directory.Exists(masterDataPath) == false)
+            {
+                masterDataPath = Application.streamingAssetsPath + "/MasterData";
+            }
+
+            var rows = ExcelReader.EnumerateExcelReaders(masterDataPath)
+                .SelectMany(ExcelReader.EnumerateRows);
+
+            var masterData = Logics.MasterMemoryBuilder.Build(DataTableProcessor.ConvertRowsToDictionary(rows));
+            return masterData;
         }
 
 
