@@ -80,7 +80,7 @@ namespace Genie
                 masterDataPath = Application.streamingAssetsPath + "/MasterData";
             }
 
-            var rows = ExcelReader.EnumerateExcelReaders(masterDataPath)
+            var rows = ExcelReader.EnumerateExcelReaders(masterDataPath, Application.temporaryCachePath)
                 .SelectMany(ExcelReader.EnumerateRows);
 
             var masterData = Logics.MasterMemoryBuilder.Build(DataTableProcessor.ConvertRowsToDictionary(rows));

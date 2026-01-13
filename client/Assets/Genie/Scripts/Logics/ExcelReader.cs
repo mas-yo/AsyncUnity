@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using ExcelDataReader;
+using Unity.Android.Gradle.Manifest;
 
 namespace Genie.Logics
 {
@@ -30,11 +32,13 @@ namespace Genie.Logics
             }
         }
 
-        public static IEnumerable<IExcelDataReader> EnumerateExcelReaders(string directoryPath)
+        public static IEnumerable<IExcelDataReader> EnumerateExcelReaders(string directoryPath, string temporaryPath)
         {
-            return EnumerateExcelFiles(directoryPath).Select(x =>
+            return EnumerateExcelFiles(directoryPath).Select(path =>
             {
-                var stream = System.IO.File.Open(x, System.IO.FileMode.Open, System.IO.FileAccess.Read);
+                var tempPath = Path.Combine(temporaryPath, Path.GetFileName(path));
+                File.Copy(path, tempPath, true );
+                var stream = File.Open(tempPath, FileMode.Open, FileAccess.Read);
                 var reader = ExcelReaderFactory.CreateReader(stream);
                 return reader;
             });
@@ -42,7 +46,8 @@ namespace Genie.Logics
         
         public static IEnumerable<string> EnumerateExcelFiles(string directoryPath)
         {
-            return System.IO.Directory.EnumerateFiles(directoryPath, "*.xlsx", System.IO.SearchOption.AllDirectories);
+            return System.IO.Directory.EnumerateFiles(directoryPath, "*.xlsx", System.IO.SearchOption.TopDirectoryOnly)
+                .Where(x => !Path.GetFileName(x).StartsWith("~"));
         }
     }
 }
