@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using ExcelDataReader;
-using Unity.Android.Gradle.Manifest;
 
 namespace Genie.Logics
 {
