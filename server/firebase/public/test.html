@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Firebase Callable Functions テスト</title>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-functions-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+  <h1>Firebase Callable Functions テスト</h1>
+  <button onclick="callHelloWorld()">helloWorld</button>
+  <button onclick="callGetAllUsers()">getAllUsers</button>
+  <button onclick="callGetUser()">getUser (ID指定)</button>
+  <input id="userIdInput" placeholder="userId" />
+  <button onclick="callCreateUser()">createUser</button>
+  <button onclick="callDebugUsers()">debugUsers</button>
+  <pre id="result"></pre>
+  <script>
+    // TODO: 下記を自分のFirebaseプロジェクトの設定に書き換えてください
+    const firebaseConfig = {
+        apiKey: "AIzaSyAfFmRegfpv9xCk9VhlQJk-JpHjmGiMg4s",
+        authDomain: "genie-24c70.firebaseapp.com",
+        projectId: "genie-24c70",
+        storageBucket: "genie-24c70.firebasestorage.app",
+        messagingSenderId: "994179819232",
+        appId: "1:994179819232:web:5b46394dc076ef3bd79285",
+        measurementId: "G-M7BTTQ0ST0"
+    };
+    firebase.initializeApp(firebaseConfig);
+    firebase.functions().useEmulator('localhost', 5001);
+    const functions = firebase.functions();
+
+    function showResult(data) {
+      document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+    }
+    async function callHelloWorld() {
+      const res = await functions.httpsCallable('helloWorld')();
+      showResult(res.data);
+    }
+    async function callGetAllUsers() {
+      const res = await functions.httpsCallable('getAllUsers')();
+      showResult(res.data);
+    }
+    async function callGetUser() {
+      const userId = document.getElementById('userIdInput').value;
+      const res = await functions.httpsCallable('getUser')({ userId });
+      showResult(res.data);
+    }
+    async function callCreateUser() {
+      const res = await functions.httpsCallable('createUser')();
+      showResult(res.data);
+    }
+    async function callDebugUsers() {
+      const res = await functions.httpsCallable('debugUsers')();
+      showResult(res.data);
+    }
+  </script>
+</body>
+</html>
+

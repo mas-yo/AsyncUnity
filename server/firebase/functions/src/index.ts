@@ -41,97 +41,74 @@ if (process.env.FUNCTIONS_EMULATOR) {
 }
 
 
-export const helloWorld = functions.https.onRequest((request, response) => {
-  functions.logger.info("Hello logs!", {structuredData: true});
-  response.send("Hello from Firebase!");
+// helloWorld callable
+export const helloWorld = functions.https.onCall((data, context) => {
+  functions.logger.info("Hello logs!", { structuredData: true });
+  return "Hello from Firebase!";
 });
 
-export const getAllUsers = functions.https.onRequest(
-  async (req, res) => {
-    const snapshot = await db.collection("users").get();
+// getAllUsers callable
+export const getAllUsers = functions.https.onCall(async (data, context) => {
+  const snapshot = await db.collection("users").get();
+  const users = snapshot.docs.map(d => ({
+    id: d.id,
+    ...d.data(),
+  }));
+  return users;
+});
 
+// getUser callable
+// export const getUser = functions.https.onCall(async (data: { userId: string }, context) => {
+//   try {
+//     const userId = data.userId;
+//     functions.logger.info("Fetching user:", userId);
+//     const doc = await db.collection("users").doc(userId).get();
+//     functions.logger.info("User data:", doc.data());
+//     if (!doc.exists) {
+//       return { error: "Not found" };
+//     }
+//     return doc.data();
+//   } catch (e) {
+//     return { error: e };
+//   }
+// });
+
+// createUser callable
+export const createUser = functions.https.onCall(async (data, context) => {
+  try {
+    // const { name, age } = data;
+    const name = "Alice";
+    const age = 30;
+    await db.collection("users").add({
+      name: name,
+      age: age,
+      // createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+    const snapshot = await db.collection("users").get();
     const users = snapshot.docs.map(d => ({
       id: d.id,
       ...d.data(),
     }));
-
-    res.json(users);
+    return users;
+  } catch (e) {
+    return { error: e };
   }
-);
+});
 
-
-export const getUser = functions.https.onRequest(
-  async (req, res) => {
-    try {
-      const userId = req.query.userId as string;
-
-      functions.logger.info("Fetching user:", userId);
-
-      const doc = await db.collection("users").doc(userId).get();
-
-      functions.logger.info("User data:", doc.data());
-
-      if (!doc.exists) {
-        res.status(404).send("Not found");
-        return;
-      }
-
-      res.json(doc.data());
-    } catch (e) {
-      res.status(500).send(e);
-    }
-  }
-);
-
-export const createUser = functions.https.onRequest(
-  async (req, res) => {
-    try {
-    //   const { userId, name, age } = req.body;
-      // const userId = "testuser1";
-      const name = "Alice";
-      const age = 30;
-
-      await db.collection("users").add({
-        name: name,
-        age:age,
-        createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      });
-
-      // res.send("ok");
-      const snapshot = await db.collection("users").get();
-
-      const users = snapshot.docs.map(d => ({
-        id: d.id,
-        ...d.data(),
-      }));
-
-      res.json(users);
-
-
-    } catch (e) {
-      res.status(500).send(e);
-    }
-  }
-);
-
-export const debugUsers = functions.https.onRequest(
-  async (req, res) => {
-    const ref = await db.collection("users").add({
-      name: "debug",
-      age: 1,
-      // createdAt: admin.firestore.FieldValue.serverTimestamp(),
-    });
-
-    const snap = await db.collection("users").get();
-
-    res.json({
-      addedId: ref.id,
-      count: snap.size,
-      users: snap.docs.map(d => ({
-        id: d.id,
-        ...d.data(),
-      })),
-    });
-  }
-);
-
+// debugUsers callable
+export const debugUsers = functions.https.onCall(async (data, context) => {
+  const ref = await db.collection("users").add({
+    name: "debug",
+    age: 1,
+    // createdAt: admin.firestore.FieldValue.serverTimestamp(),
+  });
+  const snap = await db.collection("users").get();
+  return {
+    addedId: ref.id,
+    count: snap.size,
+    users: snap.docs.map(d => ({
+      id: d.id,
+      ...d.data(),
+    })),
+  };
+});

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AgentMigrationStateService">
+    <option name="migrationStatus" value="IN_PROGRESS" />
+    <option name="pendingSessionIds">
+      <option value="992747f4-fa0c-4c13-adcb-0511de3d0d20" />
+      <option value="bc63c9f6-3230-4ab2-858d-fe9a16e62685" />
+      <option value="bf73cb33-76c4-4b9a-9607-437bcf7a2827" />
+    </option>
+    <option name="pendingTurns">
+      <map>
+        <entry key="992747f4-fa0c-4c13-adcb-0511de3d0d20">
+          <value>
+            <set>
+              <option value="6f7e2ec6-1793-4ab9-b00b-e2c9ec77fce5" />
+              <option value="601d81e3-60e8-4285-bcbf-344684b4e04c" />
+            </set>
+          </value>
+        </entry>
+        <entry key="bc63c9f6-3230-4ab2-858d-fe9a16e62685">
+          <value>
+            <set>
+              <option value="78413a0a-1968-40f5-aff0-bc8ce54ac862" />
+            </set>
+          </value>
+        </entry>
+        <entry key="bf73cb33-76c4-4b9a-9607-437bcf7a2827">
+          <value>
+            <set>
+              <option value="6204503b-ff81-4e01-b8c8-4886ac721f39" />
+              <option value="d366e855-1ee8-4de6-854b-4a0fd195f65e" />
+            </set>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <pendingWorkingSetItems>
+      <entry key="bf73cb33-76c4-4b9a-9607-437bcf7a2827" />
+    </pendingWorkingSetItems>
+  </component>
+</project>
