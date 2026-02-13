@@ -179,17 +179,29 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2867619094418887384, guid: 60554809d6946774da2c1a47f6721d24, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -178
+      objectReference: {fileID: 0}
+    - target: {fileID: 2867619094418887384, guid: 60554809d6946774da2c1a47f6721d24, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -391
+      objectReference: {fileID: 0}
     - target: {fileID: 2996381288947048856, guid: 60554809d6946774da2c1a47f6721d24, type: 3}
       propertyPath: m_Name
       value: QuestStartItem
       objectReference: {fileID: 0}
     - target: {fileID: 3028158474972733532, guid: 60554809d6946774da2c1a47f6721d24, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.0008256187
+      value: 0.00044551515
       objectReference: {fileID: 0}
     - target: {fileID: 3150569135116391395, guid: 60554809d6946774da2c1a47f6721d24, type: 3}
       propertyPath: m_Name
       value: HomeMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 3326978710421965320, guid: 60554809d6946774da2c1a47f6721d24, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3728874916518631262, guid: 60554809d6946774da2c1a47f6721d24, type: 3}
       propertyPath: m_Size
@@ -253,7 +265,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7654891355584139790, guid: 60554809d6946774da2c1a47f6721d24, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.00091549015
+      value: 0.00044551515
       objectReference: {fileID: 0}
     - target: {fileID: 8250671585909120894, guid: 60554809d6946774da2c1a47f6721d24, type: 3}
       propertyPath: m_AnchorMax.x
@@ -396,7 +408,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3554a57a1d728ae47bc70686264c612c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  PresentScrollRect: {fileID: 0}
 --- !u!1 &887563757
 GameObject:
   m_ObjectHideFlags: 0

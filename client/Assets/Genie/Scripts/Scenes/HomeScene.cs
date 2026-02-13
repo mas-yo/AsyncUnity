@@ -43,11 +43,14 @@ namespace Genie.Scenes
                         break;
                     
                     case HomeViewType.QuestList:
+                        var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(token);
                         var questResult = await UniTask.WhenAny(
-                            QuestListView.ShowAsync(questListViewComponents, new [] {1L,2L}, token),
-                            footerView.OnClickPresentBoxButtonAsync(token),
-                            footerView.OnClickOptionButtonAsync(token)
+                            QuestListView.ShowAsync(questListViewComponents, new [] {1L,2L}, linkedCts.Token),
+                            footerView.OnClickPresentBoxButtonAsync(linkedCts.Token),
+                            footerView.OnClickOptionButtonAsync(linkedCts.Token)
                             );
+                        
+                        linkedCts.Cancel();
 
                         switch (questResult.winArgumentIndex)
                         {
