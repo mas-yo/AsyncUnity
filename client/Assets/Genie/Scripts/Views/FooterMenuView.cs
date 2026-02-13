@@ -1,7 +1,8 @@
 ﻿
+using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Genie.Views
 {
@@ -24,18 +25,18 @@ namespace Genie.Views
             _components = components;
         }
     
-        public async UniTask<QuestButtonClicked> OnClickQuestButtonAsync(CancellationToken token)
+        public Func<CancellationToken, UniTask<QuestButtonClicked>> OnClickQuestButtonAsync()
         {
-            return await _components.QuestButton.OnClickAsync(token).ContinueWith(() => new QuestButtonClicked());
+            return (token) => _components.QuestButton.OnClickAsync(token).ContinueWith(() => new QuestButtonClicked());
         }
 
-        public async UniTask<PresentBoxButtonClicked> OnClickPresentBoxButtonAsync(CancellationToken token)
+        public Func<CancellationToken, UniTask<PresentBoxButtonClicked>> OnClickPresentBoxButtonAsync()
         {
-            return await _components.PresentBoxButton.OnClickAsync(token).ContinueWith(() => new PresentBoxButtonClicked());
+            return (token) => _components.PresentBoxButton.OnClickAsync(token).ContinueWith(() => new PresentBoxButtonClicked());
         }
-        public async UniTask<OptionButtonClicked> OnClickOptionButtonAsync(CancellationToken token)
+        public Func<CancellationToken, UniTask<OptionButtonClicked>> OnClickOptionButtonAsync()
         {
-            return await _components.OptionButton.OnClickAsync(token).ContinueWith(() => new OptionButtonClicked());
+            return (token) => _components.OptionButton.OnClickAsync(token).ContinueWith(() => new OptionButtonClicked());
         }
     }
 }

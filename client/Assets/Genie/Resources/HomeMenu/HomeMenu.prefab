@@ -438,7 +438,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000051021576}
+  m_AnchoredPosition: {x: 0, y: -0.000023113838}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &6882527285299136015
@@ -526,7 +526,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1dd6abd59fad42a5ba2c1aed9431c12a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Genie.Windows.PresentBoxWindowComponents
+  PresentBoxEntryPrefab: {fileID: 3855193085958662488, guid: 746888fe09f1a4844abfddb43a1e6d69, type: 3}
   PresentScrollRect: {fileID: 1796641860675372951}
+  ButtonsParent: {fileID: 7654891355584139790}
 --- !u!1 &2324644642288594539
 GameObject:
   m_ObjectHideFlags: 0
@@ -709,7 +711,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000101566315}
+  m_AnchoredPosition: {x: 0, y: 0.00012665347}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &2374794803184702183
@@ -903,8 +905,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -570, y: -341}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: -570.2101, y: -341}
+  m_SizeDelta: {x: 159.5799, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8998767301316206644
 CanvasRenderer:
@@ -1187,7 +1189,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -396, y: -391}
+  m_AnchoredPosition: {x: -184, y: -391}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5678622677035905084

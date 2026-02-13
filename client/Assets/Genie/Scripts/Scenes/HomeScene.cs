@@ -31,7 +31,8 @@ namespace Genie.Scenes
             var footerView = await FooterMenuView.CreateAsync(token);
             var questListViewComponents = Object.FindAnyObjectByType<QuestListViewComponents>();
             var presentBoxViewComponents = Object.FindAnyObjectByType<PresentBoxViewComponents>();
-
+            questListViewComponents.gameObject.SetActive(false);
+            presentBoxViewComponents.gameObject.SetActive(false);
 
             var viewType = homeViewType;
             while (true)
@@ -40,17 +41,14 @@ namespace Genie.Scenes
                 {
                     case HomeViewType.HomeMenu:
                         await StartHomeMenuAsync(token);
+                        return new Result() { StartQuestCode = 0 };
                         break;
                     
                     case HomeViewType.QuestList:
-                        var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(token);
-                        var questResult = await UniTask.WhenAny(
-                            QuestListView.ShowAsync(questListViewComponents, new [] {1L,2L}, linkedCts.Token),
-                            footerView.OnClickPresentBoxButtonAsync(linkedCts.Token),
-                            footerView.OnClickOptionButtonAsync(linkedCts.Token)
-                            );
-                        
-                        linkedCts.Cancel();
+                        var questResult = await UniTaskUtil.WhenAnyWithCancel(token,
+                            QuestListView.ShowAsync(questListViewComponents, new[] { 1l, 2l }),
+                            footerView.OnClickPresentBoxButtonAsync(),
+                            footerView.OnClickOptionButtonAsync());
 
                         switch (questResult.winArgumentIndex)
                         {
@@ -70,11 +68,23 @@ namespace Genie.Scenes
                         break;
                     
                     case HomeViewType.PresentBox:
-                        await PresentBoxView.ShowAsync(presentBoxViewComponents, token);
+                        var result = await UniTaskUtil.WhenAnyWithCancel(token,
+                            (t) => PresentBoxView.ShowAsync(presentBoxViewComponents, t),
+                            footerView.OnClickQuestButtonAsync(),
+                            footerView.OnClickOptionButtonAsync());
+
+                        viewType = result.winArgumentIndex switch
+                        {
+                            0 => HomeViewType.PresentBox,
+                            1 => HomeViewType.QuestList,
+                            2 => HomeViewType.PresentBox,
+                            _ => viewType
+                        };
                         break;
                 }
                 
             }
+
             
         }
         private static async UniTask StartHomeMenuAsync(CancellationToken token)
