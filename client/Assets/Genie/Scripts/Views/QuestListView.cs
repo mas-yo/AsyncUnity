@@ -42,6 +42,7 @@ namespace Genie.Views
                 {
                     var questCode = questCodes[i];
                     var button = Object.Instantiate(_components.QuestListEntryPrefab, _components.ButtonsParent).GetComponent<Button>();
+                    button.GetComponentInChildren<Text>().text = $"QUEST: {questCode}";
                     tasks[i] = (t) => button.OnClickAsync(t).ContinueWith(() => questCode);
                     buttons.Add(button);
                 }

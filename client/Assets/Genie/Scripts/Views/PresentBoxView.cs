@@ -41,6 +41,7 @@ namespace Genie.Views
                 {
                     var code = dummyPresentCodes[i];
                     var button = Object.Instantiate(_components.PresentBoxEntryPrefab, _components.ButtonsParent).GetComponent<Button>();
+                    button.GetComponentInChildren<Text>().text = $"PRESENT: {code}";
                     tasks[i] = (t) => button.OnClickAsync(t).ContinueWith(() => code);
                     buttons.Add(button);
                 }
