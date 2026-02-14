@@ -9,21 +9,30 @@ using Object = UnityEngine.Object;
 
 namespace Genie.Views
 {
-    public static class QuestListView
+    public class QuestListView
     {
+        private readonly QuestListViewComponents _components;
+        
         public struct Result
         {
             public long QuestCode;
         }
 
-        public static Func<CancellationToken, UniTask<Result>> ShowAsync(QuestListViewComponents components, long[] questCodes)
+        public QuestListView(QuestListViewComponents components)
         {
-            return (token) => ShowAsync(components, questCodes, token);
+            _components = components;
         }
-        public static async UniTask<Result> ShowAsync(QuestListViewComponents components, long[] questCodes,
-            CancellationToken token)
+
+        public void SetActive(bool active)
         {
-            components.gameObject.SetActive(true);
+            _components.gameObject.SetActive(active);
+        }
+        public Func<CancellationToken, UniTask<Result>> OnClickQuestButton(long[] questCodes)
+        {
+            return (token) => OnClickQuestButtonAsync(questCodes, token);
+        }
+        public async UniTask<Result> OnClickQuestButtonAsync(long[] questCodes, CancellationToken token)
+        {
             var buttons = new List<Button>();
             try
             {
@@ -32,8 +41,8 @@ namespace Genie.Views
                 for (var i = 0; i < questCodes.Length; i++)
                 {
                     var questCode = questCodes[i];
-                    var button = Object.Instantiate(components.QuestListEntryPrefab, components.ButtonsParent).GetComponent<Button>();
-                    tasks[i] = (token) => button.OnClickAsync(token).ContinueWith(() => questCode);
+                    var button = Object.Instantiate(_components.QuestListEntryPrefab, _components.ButtonsParent).GetComponent<Button>();
+                    tasks[i] = (t) => button.OnClickAsync(t).ContinueWith(() => questCode);
                     buttons.Add(button);
                 }
 
@@ -42,7 +51,7 @@ namespace Genie.Views
             }
             finally
             {
-                components.gameObject.SetActive(false);
+                _components.gameObject.SetActive(false);
                 foreach (var button in buttons)
                 {
                     Object.Destroy(button.gameObject);

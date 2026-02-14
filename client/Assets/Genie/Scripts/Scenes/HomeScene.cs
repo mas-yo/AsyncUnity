@@ -28,10 +28,9 @@ namespace Genie.Scenes
         public static async UniTask<Result> StartAsync(HomeViewType homeViewType, CancellationToken token)
         {
             await SceneManager.LoadSceneAsync("HomeScene", LoadSceneMode.Single);
+            var questListView = new QuestListView(Object.FindAnyObjectByType<QuestListViewComponents>());
             var footerView = await FooterMenuView.CreateAsync(token);
-            var questListViewComponents = Object.FindAnyObjectByType<QuestListViewComponents>();
             var presentBoxViewComponents = Object.FindAnyObjectByType<PresentBoxViewComponents>();
-            questListViewComponents.gameObject.SetActive(false);
             presentBoxViewComponents.gameObject.SetActive(false);
 
             var viewType = homeViewType;
@@ -45,11 +44,13 @@ namespace Genie.Scenes
                         break;
                     
                     case HomeViewType.QuestList:
+                        questListView.SetActive(true);
                         var questResult = await UniTaskUtil.WhenAnyWithCancel(token,
-                            QuestListView.ShowAsync(questListViewComponents, new[] { 1l, 2l }),
+                            questListView.OnClickQuestButton(new[] { 1L, 2L }),
                             footerView.OnClickPresentBoxButtonAsync(),
                             footerView.OnClickOptionButtonAsync());
 
+                        questListView.SetActive(false);
                         switch (questResult.winArgumentIndex)
                         {
                             case 0:
