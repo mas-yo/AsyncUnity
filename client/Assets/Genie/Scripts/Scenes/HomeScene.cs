@@ -29,9 +29,11 @@ namespace Genie.Scenes
         {
             await SceneManager.LoadSceneAsync("HomeScene", LoadSceneMode.Single);
             var questListView = new QuestListView(Object.FindAnyObjectByType<QuestListViewComponents>());
+            var presentBoxView = new PresentBoxView(Object.FindAnyObjectByType<PresentBoxViewComponents>());
             var footerView = await FooterMenuView.CreateAsync(token);
-            var presentBoxViewComponents = Object.FindAnyObjectByType<PresentBoxViewComponents>();
-            presentBoxViewComponents.gameObject.SetActive(false);
+            
+            questListView.SetActive(false);
+            presentBoxView.SetActive(false);
 
             var viewType = homeViewType;
             while (true)
@@ -69,10 +71,13 @@ namespace Genie.Scenes
                         break;
                     
                     case HomeViewType.PresentBox:
+                        presentBoxView.SetActive(true);
                         var result = await UniTaskUtil.WhenAnyWithCancel(token,
-                            (t) => PresentBoxView.ShowAsync(presentBoxViewComponents, t),
+                            presentBoxView.OnClickPresentButton(),
                             footerView.OnClickQuestButtonAsync(),
                             footerView.OnClickOptionButtonAsync());
+                        
+                        presentBoxView.SetActive(false);
 
                         viewType = result.winArgumentIndex switch
                         {

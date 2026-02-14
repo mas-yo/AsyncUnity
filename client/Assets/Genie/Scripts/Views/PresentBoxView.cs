@@ -10,13 +10,27 @@ namespace Genie.Views
 {
     public class PresentBoxView
     {
+        private readonly PresentBoxViewComponents _components;
         public struct Result
         {
             public long dummy;
         }
-        public static async UniTask<Result> ShowAsync(PresentBoxViewComponents components, CancellationToken token)
+        
+        public PresentBoxView(PresentBoxViewComponents components)
         {
-            components.gameObject.SetActive(true);
+            _components = components;
+        }
+
+        public void SetActive(bool active)
+        {
+            _components.gameObject.SetActive(active);
+        }
+        public Func<CancellationToken, UniTask<Result>> OnClickPresentButton()
+        {
+            return OnClickPresentButtonAsync;
+        }
+        public async UniTask<Result> OnClickPresentButtonAsync(CancellationToken token)
+        {
             var dummyPresentCodes = new long[] { 1001, 1002, 1003 };
             var buttons = new List<Button>();
             try
@@ -26,8 +40,8 @@ namespace Genie.Views
                 for (var i = 0; i < dummyPresentCodes.Length; i++)
                 {
                     var code = dummyPresentCodes[i];
-                    var button = Object.Instantiate(components.PresentBoxEntryPrefab, components.ButtonsParent).GetComponent<Button>();
-                    tasks[i] = (token) => button.OnClickAsync(token).ContinueWith(() => code);
+                    var button = Object.Instantiate(_components.PresentBoxEntryPrefab, _components.ButtonsParent).GetComponent<Button>();
+                    tasks[i] = (t) => button.OnClickAsync(t).ContinueWith(() => code);
                     buttons.Add(button);
                 }
 
@@ -36,7 +50,7 @@ namespace Genie.Views
             }
             finally
             {
-                components.gameObject.SetActive(false);
+                _components.gameObject.SetActive(false);
                 foreach (var button in buttons)
                 {
                     Object.Destroy(button.gameObject);
