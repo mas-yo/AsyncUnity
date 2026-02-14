@@ -14,29 +14,27 @@ namespace Genie.Views
         
         private readonly FooterMenuViewComponents _components;
     
-        public static async UniTask<FooterMenuView> CreateAsync(CancellationToken token)
-        {
-            var bridge = Object.FindAnyObjectByType<FooterMenuViewComponents>();
-            return new FooterMenuView(bridge);
-        }
-
         public FooterMenuView(FooterMenuViewComponents components)
         {
             _components = components;
         }
-    
-        public Func<CancellationToken, UniTask<QuestButtonClicked>> OnClickQuestButtonAsync()
+
+        public void SetActive(bool active)
         {
-            return (token) => _components.QuestButton.OnClickAsync(token).ContinueWith(() => new QuestButtonClicked());
+            _components.gameObject.SetActive(active);
+        }
+        public UniTask<QuestButtonClicked> OnClickQuestButtonAsync(CancellationToken token)
+        {
+            return _components.QuestButton.OnClickAsync(token).ContinueWith(() => new QuestButtonClicked());
         }
 
-        public Func<CancellationToken, UniTask<PresentBoxButtonClicked>> OnClickPresentBoxButtonAsync()
+        public UniTask<PresentBoxButtonClicked> OnClickPresentBoxButtonAsync(CancellationToken token)
         {
-            return (token) => _components.PresentBoxButton.OnClickAsync(token).ContinueWith(() => new PresentBoxButtonClicked());
+            return _components.PresentBoxButton.OnClickAsync(token).ContinueWith(() => new PresentBoxButtonClicked());
         }
-        public Func<CancellationToken, UniTask<OptionButtonClicked>> OnClickOptionButtonAsync()
+        public UniTask<OptionButtonClicked> OnClickOptionButtonAsync(CancellationToken token)
         {
-            return (token) => _components.OptionButton.OnClickAsync(token).ContinueWith(() => new OptionButtonClicked());
+            return _components.OptionButton.OnClickAsync(token).ContinueWith(() => new OptionButtonClicked());
         }
     }
 }
