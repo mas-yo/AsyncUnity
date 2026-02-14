@@ -17,6 +17,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Genie/Scenes/GameScene.unity
     guid: 3f0c7ea9151fb2a468aefbf92ab66672
+  - enabled: 1
+    path: Assets/Genie/Scenes/HomeScene.unity
+    guid: f1ed0cc928a03ba4e90ab804bee10d1e
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

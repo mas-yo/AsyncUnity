@@ -61,6 +61,8 @@ namespace Genie
                 
                 var masterData = LoadMasterData(token);
                 var stageMaster = masterData.StageMasterTable.FindByCode(titleResult.UserInfo.CurrentStageCode);
+
+                var homeResult = await HomeScene.StartAsync(HomeScene.HomeViewType.QuestList, token);
                 
                 var gameResult = await GameScene.StartAsync(
                     masterData: masterData,
