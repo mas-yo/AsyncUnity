@@ -1,5 +1,7 @@
+using System;
 using Cysharp.Threading.Tasks;
 using System.Threading;
+using Genie.Logics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -21,6 +23,9 @@ namespace Genie.Scripts.Scenes
             var startButtonObj = GameObject.Find("StartButton");
             var startButton = startButtonObj.GetComponent<Button>();
             await startButton.OnClickAsync(token);
+
+            LocalStorage.SaveShownQuestCodes(Array.Empty<long>());
+            
             return new Result()
             {
                 IsStandalone = standalponeToggle.isOn,

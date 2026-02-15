@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 namespace Genie.Utils
 {
@@ -48,6 +49,19 @@ namespace Genie.Utils
             linkedCts.Cancel();
             return result.result;
         }
+        
+        public static async UniTask WaitAnimationComplete(
+            this Animator animator,
+            int layer = 0,
+            CancellationToken cancellationToken = default)
+        {
+            await UniTask.WaitUntil(() =>
+            {
+                var state = animator.GetCurrentAnimatorStateInfo(layer);
+                return state.normalizedTime >= 1f && !animator.IsInTransition(layer);
+            }, cancellationToken: cancellationToken);
+        }
+
         
     }
 }

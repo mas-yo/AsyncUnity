@@ -35,10 +35,12 @@ namespace Genie.Scenes
             var questListView = new QuestListView(Object.FindAnyObjectByType<QuestListViewComponents>(), userInfo.ClearedQuestCodes);
             var presentBoxView = new PresentBoxView(Object.FindAnyObjectByType<PresentBoxViewComponents>());
             var footerView = new FooterMenuView(Object.FindAnyObjectByType<FooterMenuViewComponents>());
+            var newQuestOpenedVfx = new NewQuestOpenedVfx(Object.FindAnyObjectByType<NewQuestOpenedVfxComponents>());
             
             questListView.SetActive(false);
             presentBoxView.SetActive(false);
             footerView.SetActive(true);
+            newQuestOpenedVfx.SetActive(false);
 
             var viewType = homeViewType;
             while (true)
@@ -56,7 +58,9 @@ namespace Genie.Scenes
                         var currentQuestCodes = userInfo.ClearedQuestCodes;
                         if (currentQuestCodes.Except(prevQuestCodes).Any())
                         {
-                            //show clear quest animation
+                            newQuestOpenedVfx.SetActive(true);
+                            await newQuestOpenedVfx.PlayAsync();
+                            newQuestOpenedVfx.SetActive(false);
                             LocalStorage.SaveShownQuestCodes(currentQuestCodes);
                         }
                         var questResult = await UniTaskUtil.WhenAnyWithCancel(token,

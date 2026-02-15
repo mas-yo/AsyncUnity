@@ -193,7 +193,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3028158474972733532, guid: 60554809d6946774da2c1a47f6721d24, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000097557255
+      value: 0.000033107855
       objectReference: {fileID: 0}
     - target: {fileID: 3150569135116391395, guid: 60554809d6946774da2c1a47f6721d24, type: 3}
       propertyPath: m_Name
@@ -265,7 +265,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7654891355584139790, guid: 60554809d6946774da2c1a47f6721d24, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.00020148991
+      value: 0.00013046553
       objectReference: {fileID: 0}
     - target: {fileID: 8250671585909120894, guid: 60554809d6946774da2c1a47f6721d24, type: 3}
       propertyPath: m_AnchorMax.x
@@ -872,10 +872,6 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 8716933cee1e2d1498fe189220026405, type: 3}
-    - target: {fileID: 983192439422827643, guid: 826178a0d54ebcc42aeb7c96a4f39b86, type: 3}
-      propertyPath: m_Material
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 7036045578612737268, guid: 826178a0d54ebcc42aeb7c96a4f39b86, type: 3}
       propertyPath: m_Name
       value: OpenNewQuestVfx
