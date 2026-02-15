@@ -1,4 +1,4 @@
-﻿
+﻿﻿
 using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
@@ -19,9 +19,14 @@ namespace Genie.Views
             _components = components;
         }
 
-        public void SetActive(bool active)
+        public void Show()
         {
-            _components.gameObject.SetActive(active);
+            _components.gameObject.SetActive(true);
+        }
+
+        public void Hide()
+        {
+            _components.gameObject.SetActive(false);
         }
         public UniTask<QuestButtonClicked> OnClickQuestButtonAsync(CancellationToken token)
         {

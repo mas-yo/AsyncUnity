@@ -25,9 +25,14 @@ namespace Genie.Views
             _questCodes = questCodes;
         }
 
-        public void SetActive(bool active)
+        public void Show()
         {
-            _components.gameObject.SetActive(active);
+            _components.gameObject.SetActive(true);
+        }
+
+        public void Hide()
+        {
+            _components.gameObject.SetActive(false);
         }
         public async UniTask<Result> OnClickQuestButtonAsync(CancellationToken token)
         {
@@ -50,7 +55,7 @@ namespace Genie.Views
             }
             finally
             {
-                _components.gameObject.SetActive(false);
+                Hide();
                 foreach (var button in buttons)
                 {
                     Object.Destroy(button.gameObject);
