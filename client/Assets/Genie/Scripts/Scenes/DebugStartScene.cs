@@ -2,9 +2,12 @@ using System;
 using Cysharp.Threading.Tasks;
 using System.Threading;
 using Genie.Logics;
+using Genie.Utils;
+using Genie.Views;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 namespace Genie.Scripts.Scenes
 {
@@ -19,18 +22,32 @@ namespace Genie.Scripts.Scenes
         public static async UniTask<Result> StartAsync(CancellationToken token)
         {
             await SceneManager.LoadSceneAsync("DebugStartScene", LoadSceneMode.Single);
-            var standalponeToggle = GameObject.Find("StandaloneToggle").GetComponent<Toggle>();
-            var startButtonObj = GameObject.Find("StartButton");
-            var startButton = startButtonObj.GetComponent<Button>();
-            await startButton.OnClickAsync(token);
-
-            LocalStorage.SaveShownQuestCodes(Array.Empty<long>());
             
-            return new Result()
+            var debugStartView = new DebugStartView(Object.FindAnyObjectByType<DebugStartViewComponents>());
+
+            while (true)
             {
-                IsStandalone = standalponeToggle.isOn,
-                ApiBaseUrl = "http://localhost:5000/api/"
-            };
+                var result = await UniTaskUtil.WaitAndCancel(token,
+                    debugStartView.OnClickStartButtonAsync,
+                    debugStartView.OnClickClearLocalSaveButtonAsync
+                );
+
+                switch (result.winArgumentIndex)
+                {
+                    case 0:
+                        return new Result()
+                        {
+                            IsStandalone = false,
+                            ApiBaseUrl = "http://localhost:5000/api/"
+                        };
+                        
+                    case 1:
+                        LocalStorage.SaveShownQuestCodes(Array.Empty<long>());
+                        break;
+                }
+            }
+
+            
         }
     }
 }
