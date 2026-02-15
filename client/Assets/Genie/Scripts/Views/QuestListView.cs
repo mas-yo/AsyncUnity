@@ -12,35 +12,33 @@ namespace Genie.Views
     public class QuestListView
     {
         private readonly QuestListViewComponents _components;
+        private readonly long[] _questCodes;
         
         public struct Result
         {
             public long QuestCode;
         }
 
-        public QuestListView(QuestListViewComponents components)
+        public QuestListView(QuestListViewComponents components, long[] questCodes)
         {
             _components = components;
+            _questCodes = questCodes;
         }
 
         public void SetActive(bool active)
         {
             _components.gameObject.SetActive(active);
         }
-        public Func<CancellationToken, UniTask<Result>> OnClickQuestButton(long[] questCodes)
-        {
-            return (token) => OnClickQuestButtonAsync(questCodes, token);
-        }
-        public async UniTask<Result> OnClickQuestButtonAsync(long[] questCodes, CancellationToken token)
+        public async UniTask<Result> OnClickQuestButtonAsync(CancellationToken token)
         {
             var buttons = new List<Button>();
             try
             {
-                var tasks = new Func<CancellationToken, UniTask<long>>[questCodes.Length];
+                var tasks = new Func<CancellationToken, UniTask<long>>[_questCodes.Length];
 
-                for (var i = 0; i < questCodes.Length; i++)
+                for (var i = 0; i < _questCodes.Length; i++)
                 {
-                    var questCode = questCodes[i];
+                    var questCode = _questCodes[i];
                     var button = Object.Instantiate(_components.QuestListEntryPrefab, _components.ButtonsParent).GetComponent<Button>();
                     button.GetComponentInChildren<Text>().text = $"QUEST: {questCode}";
                     tasks[i] = (t) => button.OnClickAsync(t).ContinueWith(() => questCode);

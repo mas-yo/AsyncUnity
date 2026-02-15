@@ -31,8 +31,16 @@ namespace Genie.Scenes
             // var downloadHandler = await WebApi.RequestAsync(apiBaseUrl + Login.endPoint, requestBytes, header, 10);
             //
             // var response = MessagePackSerializer.Deserialize<Login.Response>(downloadHandler.data);
-            
-            return new Result() { UserInfo = new UserInfo() { UserId = "TestUser", UserName = "Test User", CurrentStageCode = 1} };
+
+            return new Result()
+            {
+                UserInfo = new UserInfo()
+                {
+                    UserId = "TestUser",
+                    UserName = "Test User",
+                    ClearedQuestCodes = new[]{ 1L, 2L }
+                }
+            };
         }
     }
 }

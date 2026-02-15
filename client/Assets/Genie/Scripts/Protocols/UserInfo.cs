@@ -1,4 +1,5 @@
-﻿using MessagePack;
+﻿using System.Collections.Generic;
+using MessagePack;
 
 namespace Genie.Protocols
 {
@@ -10,6 +11,6 @@ namespace Genie.Protocols
         [Key(1)]
         public string UserName;
         [Key(2)]
-        public long CurrentStageCode;
+        public long[] ClearedQuestCodes;
     }
 }

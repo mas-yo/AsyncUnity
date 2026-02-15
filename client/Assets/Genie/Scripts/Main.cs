@@ -60,9 +60,13 @@ namespace Genie
                 var titleResult = await TitleScene.StartAsync(apiBaseUrl, "1.0.0", token);
                 
                 var masterData = LoadMasterData(token);
-                var stageMaster = masterData.StageMasterTable.FindByCode(titleResult.UserInfo.CurrentStageCode);
+                var stageMaster = masterData.StageMasterTable.FindByCode(1);
 
-                var homeResult = await HomeScene.StartAsync(HomeScene.HomeViewType.QuestList, token);
+                var homeResult = await HomeScene.StartAsync(
+                    masterData,
+                    titleResult.UserInfo,
+                    HomeScene.HomeViewType.QuestList, 
+                    token);
                 
                 var gameResult = await GameScene.StartAsync(
                     masterData: masterData,

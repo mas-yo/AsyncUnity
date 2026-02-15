@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿﻿using System.Collections.Generic;
 using Genie.MasterData;
 using Genie.Scripts.MasterData;
 using MasterMemory;
@@ -16,6 +16,7 @@ namespace Genie.Logics
             var stages = new List<StageMaster>();
             var items = new List<ItemMaster>();
             var objects = new List<ObjectMaster>();
+            var quests = new List<QuestMaster>();
             foreach (var row in rows)
             {
                 if (string.Equals(row.tableName, "PlayerMaster"))
@@ -34,12 +35,17 @@ namespace Genie.Logics
                 {
                     objects.Add(ObjectMaster.FromDictionary(row.dict));
                 }
+                else if (string.Equals(row.tableName, "QuestMaster"))
+                {
+                    quests.Add(QuestMaster.FromDictionary(row.dict));
+                }
             }
 
             builder.Append(characters);
             builder.Append(stages);
             builder.Append(items);
             builder.Append(objects);
+            builder.Append(quests);
 
             return new MemoryDatabase(builder.Build());
         }

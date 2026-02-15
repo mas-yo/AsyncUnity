@@ -1,13 +1,13 @@
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using System.Threading;
-using System.Threading.Tasks;
+using Genie.MasterData;
+using Genie.Protocols;
 using Genie.Utils;
 using Genie.Views;
-using Genie.Windows;
-using Unity.VisualScripting;
+using Genie.Logics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 namespace Genie.Scenes
 {
@@ -25,10 +25,14 @@ namespace Genie.Scenes
             public long StartQuestCode { get; init; }
         }
 
-        public static async UniTask<Result> StartAsync(HomeViewType homeViewType, CancellationToken token)
+        public static async UniTask<Result> StartAsync(
+            MemoryDatabase masterData,
+            UserInfo userInfo,
+            HomeViewType homeViewType,
+            CancellationToken token)
         {
             await SceneManager.LoadSceneAsync("HomeScene", LoadSceneMode.Single);
-            var questListView = new QuestListView(Object.FindAnyObjectByType<QuestListViewComponents>());
+            var questListView = new QuestListView(Object.FindAnyObjectByType<QuestListViewComponents>(), userInfo.ClearedQuestCodes);
             var presentBoxView = new PresentBoxView(Object.FindAnyObjectByType<PresentBoxViewComponents>());
             var footerView = new FooterMenuView(Object.FindAnyObjectByType<FooterMenuViewComponents>());
             
@@ -48,8 +52,15 @@ namespace Genie.Scenes
                     
                     case HomeViewType.QuestList:
                         questListView.SetActive(true);
+                        var prevQuestCodes = LocalStorage.LoadShownQuestCodes();
+                        var currentQuestCodes = userInfo.ClearedQuestCodes;
+                        if (currentQuestCodes.Except(prevQuestCodes).Any())
+                        {
+                            //show clear quest animation
+                            LocalStorage.SaveShownQuestCodes(currentQuestCodes);
+                        }
                         var questResult = await UniTaskUtil.WhenAnyWithCancel(token,
-                            questListView.OnClickQuestButton(new[] { 1L, 2L }),
+                            questListView.OnClickQuestButtonAsync,
                             footerView.OnClickPresentBoxButtonAsync,
                             footerView.OnClickOptionButtonAsync);
 
