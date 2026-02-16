@@ -43,7 +43,7 @@ namespace Genie.Scenes
             var results = await luaState.DoStringAsync("return OnStart()");
             var player = results[0].Read<PlayerView>();
 
-            var gameHud = await GameHud.CreateAsync();
+            var gameHud = new GameHud(Object.FindAnyObjectByType<GameHudComponents>());
 
             await UniTask.Delay(1000);
             

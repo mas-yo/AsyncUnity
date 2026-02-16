@@ -6,23 +6,16 @@ namespace Genie.Views
 {
     public class GameHud
     {
-        private Text _scoreText;
+        private GameHudComponents _components;
         
-        public static async UniTask<GameHud> CreateAsync()
+        public GameHud(GameHudComponents components)
         {
-            var prefab = await Resources.LoadAsync<GameObject>("GameHud/GameHud");
-            var obj = (GameObject)Object.Instantiate(prefab);
-            
-            return new GameHud(obj.transform.Find("Canvas/Score").GetComponent<Text>());
-        }
-        private GameHud(Text scoreText)
-        {
-            _scoreText = scoreText; // transform.Find("Canvas/Score").GetComponent<Text>();// GetComponentInChildren<Text>();
+            _components = components;
         }
         
         public void SetScore(int score)
         {
-            _scoreText.text = $"Score: {score}";
+            _components.ScoreText.text = $"Score: {score}";
         }
 
     }
