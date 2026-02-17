@@ -7,7 +7,6 @@ using Cysharp.Threading.Tasks.Linq;
 using Genie;
 using Genie.MasterData;
 using Genie.Views;
-using Genie.Windows;
 using Lua;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -29,6 +28,9 @@ namespace Genie.Scenes
             )
         {
             await SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Single);
+
+            var pauseView = new PauseView(Object.FindAnyObjectByType<PauseViewComponents>());
+            pauseView.Hide();
 
             var loadingWindow = await LoadingView.CreateAsync(token);
 
@@ -85,11 +87,13 @@ namespace Genie.Scenes
                 }
                 else if (Input.GetKey(KeyCode.Escape))
                 {
-                    var pauseResult = await PauseWindow.ShowAsync(token);
-                    if (pauseResult.IsExit)
+                    pauseView.Show();
+                    var result = await pauseView.OnClickButtonsAsync(token);
+                    if (result.ToTitle)
                     {
                         break;
                     }
+                    pauseView.Hide();
                 }
                 else
                 {

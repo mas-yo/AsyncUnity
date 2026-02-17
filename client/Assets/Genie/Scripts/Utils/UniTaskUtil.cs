@@ -42,7 +42,7 @@ namespace Genie.Utils
         }
 
 
-        public static async UniTask<T> WaitAndCancel<T>(CancellationToken token, Func<CancellationToken, UniTask<T>>[] funcs)
+        public static async UniTask<T> WaitAndCancel<T>(CancellationToken token, params Func<CancellationToken, UniTask<T>>[] funcs)
         {
             var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(token);
             var result = await UniTask.WhenAny(funcs.Select(t => t(linkedCts.Token)));
