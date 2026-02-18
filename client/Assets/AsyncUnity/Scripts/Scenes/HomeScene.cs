@@ -1,0 +1,118 @@
+using System.Linq;
+using Cysharp.Threading.Tasks;
+using System.Threading;
+using AsyncUnity.MasterData;
+using AsyncUnity.Protocols;
+using AsyncUnity.Utils;
+using AsyncUnity.Views;
+using AsyncUnity.Logics;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+namespace AsyncUnity.Scenes
+{
+    public static class HomeScene
+    {
+        public enum HomeViewType
+        {
+            HomeMenu,
+            QuestList,
+            PresentBox,
+            Option
+        }
+        public struct Result
+        {
+            public long StartQuestCode { get; init; }
+        }
+
+        public static async UniTask<Result> StartAsync(
+            MemoryDatabase masterData,
+            UserInfo userInfo,
+            HomeViewType homeViewType,
+            CancellationToken token)
+        {
+            await SceneManager.LoadSceneAsync("HomeScene", LoadSceneMode.Single);
+            var questListView = new QuestListView(Object.FindAnyObjectByType<QuestListViewComponents>(), userInfo.ClearedQuestCodes);
+            var presentBoxView = new PresentBoxView(Object.FindAnyObjectByType<PresentBoxViewComponents>());
+            var footerView = new FooterMenuView(Object.FindAnyObjectByType<FooterMenuViewComponents>());
+            var newQuestOpenedVfx = new NewQuestOpenedVfx(Object.FindAnyObjectByType<NewQuestOpenedVfxComponents>());
+            
+            questListView.Hide();
+            presentBoxView.Hide();
+            footerView.Show();
+            newQuestOpenedVfx.Hide();
+
+            var viewType = homeViewType;
+            while (true)
+            {
+                switch (viewType)
+                {
+                    case HomeViewType.HomeMenu:
+                        await StartHomeMenuAsync(token);
+                        return new Result() { StartQuestCode = 0 };
+                        break;
+                    
+                    case HomeViewType.QuestList:
+                        questListView.Show();
+                        var prevQuestCodes = LocalStorage.LoadShownQuestCodes();
+                        var currentQuestCodes = userInfo.ClearedQuestCodes;
+                        if (currentQuestCodes.Except(prevQuestCodes).Any())
+                        {
+                            newQuestOpenedVfx.Show();
+                            await newQuestOpenedVfx.PlayAsync();
+                            newQuestOpenedVfx.Hide();
+                            LocalStorage.SaveShownQuestCodes(currentQuestCodes);
+                        }
+                        var questResult = await UniTaskUtil.WhenAnyWithCancel(token,
+                            questListView.OnClickQuestButtonAsync,
+                            footerView.OnClickPresentBoxButtonAsync,
+                            footerView.OnClickOptionButtonAsync);
+
+                        questListView.Hide();
+                        switch (questResult.winArgumentIndex)
+                        {
+                            case 0:
+                                return new Result
+                                {
+                                    StartQuestCode = questResult.result1.QuestCode
+                                };
+                                break;
+                            case 1:
+                                viewType = HomeViewType.PresentBox;
+                                break;
+                            case 2:
+                                viewType = HomeViewType.Option;
+                                break;
+                        }
+                        break;
+                    
+                    case HomeViewType.PresentBox:
+                        presentBoxView.Show();
+                        var result = await UniTaskUtil.WhenAnyWithCancel(token,
+                            presentBoxView.OnClickPresentButton(),
+                            footerView.OnClickQuestButtonAsync,
+                            footerView.OnClickOptionButtonAsync);
+                        
+                        presentBoxView.Hide();
+
+                        viewType = result.winArgumentIndex switch
+                        {
+                            0 => HomeViewType.PresentBox,
+                            1 => HomeViewType.QuestList,
+                            2 => HomeViewType.PresentBox,
+                            _ => viewType
+                        };
+                        break;
+                }
+                
+            }
+
+            
+        }
+        private static async UniTask StartHomeMenuAsync(CancellationToken token)
+        {
+            // Home Menu�\������
+        }
+
+    }
+}
