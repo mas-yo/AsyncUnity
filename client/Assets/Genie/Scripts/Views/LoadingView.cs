@@ -1,29 +1,32 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Genie.Views
 {
     public class LoadingView
     {
-        private readonly GameObject _gameObject;
+        private readonly LoadingViewComponents _components;
         
-        public static async UniTask<LoadingView> CreateAsync(CancellationToken token)
+        public LoadingView(LoadingViewComponents components)
         {
-            var prefab = await Resources.LoadAsync<GameObject>("LoadingView/LoadingView");
-            var obj = (GameObject)Object.Instantiate(prefab);
-            return new LoadingView(obj);
+            _components = components;
         }
 
-        private LoadingView(GameObject gameObject)
+        public async UniTask<T> StartLoadingViewAsync<T>(CancellationToken token, Func<CancellationToken, LoadingView, UniTask<T>> callback)
         {
-            _gameObject = gameObject;
+            GameObject obj = null;
+            try
+            {
+                obj = Object.Instantiate(_components._loadingViewPrefab, _components.gameObject.transform);
+                return await callback(token, this);
+            }
+            finally
+            {
+                Object.Destroy(obj);
+            }
         }
-        
-        public void Close()
-        {
-            Object.Destroy(_gameObject);
-        }
-        
     }
 }

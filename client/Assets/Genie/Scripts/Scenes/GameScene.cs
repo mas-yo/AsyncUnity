@@ -32,24 +32,31 @@ namespace Genie.Scenes
             var pauseView = new PauseView(Object.FindAnyObjectByType<PauseViewComponents>());
             pauseView.Hide();
 
-            var loadingWindow = await LoadingView.CreateAsync(token);
+            var loadingView = new LoadingView(Object.FindAnyObjectByType<LoadingViewComponents>());
 
+            var (camera, gameHud, player) =
+            await loadingView.StartLoadingViewAsync<(GameCamera, GameHud, PlayerView)>(token, async (t, loadingWindow) =>
             {
-                var groundPrefab =
-                    await Resources.LoadAsync<GameObject>(groundPrefabPath);
-                Object.Instantiate(groundPrefab);
-            }
+                {
+                    var groundPrefab =
+                        await Resources.LoadAsync<GameObject>(groundPrefabPath);
+                    Object.Instantiate(groundPrefab);
+                }
 
-            var camera = await GameCamera.CreateAsync();
+                var camera = await GameCamera.CreateAsync();
 
-            var results = await luaState.DoStringAsync("return OnStart()");
-            var player = results[0].Read<PlayerView>();
+                var results = await luaState.DoStringAsync("return OnStart()");
+                var player = results[0].Read<PlayerView>();
 
-            var gameHud = new GameHud(Object.FindAnyObjectByType<GameHudComponents>());
+                var gameHud = new GameHud(Object.FindAnyObjectByType<GameHudComponents>());
 
-            await UniTask.Delay(1000);
+                await UniTask.Delay(1000);
+                return (camera, gameHud, player);
+
+            });
+                    
+
             
-            loadingWindow.Close();
 
             var score = 0;
             
