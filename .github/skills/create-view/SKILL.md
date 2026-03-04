@@ -1,5 +1,6 @@
 ---
-applyTo: "Assets/AsyncUnity/Scripts/Views/**/*.cs"
+name: create-view
+description: ビュークラスを追加するときのルールとベストプラクティス
 ---
 
 # ビュークラスの生成ルール
