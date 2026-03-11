@@ -1,6 +1,4 @@
-﻿﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using AsyncUnity.Utils;
@@ -13,7 +11,8 @@ namespace AsyncUnity.Views
     {
         private readonly QuestListViewComponents _components;
         private readonly long[] _questCodes;
-        
+        private readonly Func<CancellationToken, UniTask<long>>[] _onClickTasks;
+
         public struct Result
         {
             public long QuestCode;
@@ -23,6 +22,15 @@ namespace AsyncUnity.Views
         {
             _components = components;
             _questCodes = questCodes;
+            _onClickTasks = new Func<CancellationToken, UniTask<long>>[questCodes.Length];
+
+            for (var i = 0; i < questCodes.Length; i++)
+            {
+                var questCode = questCodes[i];
+                var button = Object.Instantiate(components.QuestListEntryPrefab, components.ButtonsParent).GetComponent<Button>();
+                button.GetComponentInChildren<Text>().text = $"QUEST: {questCode}";
+                _onClickTasks[i] = (t) => button.OnClickAsync(t).ContinueWith(() => questCode);
+            }
         }
 
         public void Show()
@@ -36,31 +44,8 @@ namespace AsyncUnity.Views
         }
         public async UniTask<Result> OnClickQuestButtonAsync(CancellationToken token)
         {
-            var buttons = new List<Button>();
-            try
-            {
-                var tasks = new Func<CancellationToken, UniTask<long>>[_questCodes.Length];
-
-                for (var i = 0; i < _questCodes.Length; i++)
-                {
-                    var questCode = _questCodes[i];
-                    var button = Object.Instantiate(_components.QuestListEntryPrefab, _components.ButtonsParent).GetComponent<Button>();
-                    button.GetComponentInChildren<Text>().text = $"QUEST: {questCode}";
-                    tasks[i] = (t) => button.OnClickAsync(t).ContinueWith(() => questCode);
-                    buttons.Add(button);
-                }
-
-                var resultQuestCode = await UniTaskUtil.WaitAndCancel(token, tasks);
-                return new Result { QuestCode = resultQuestCode };
-            }
-            finally
-            {
-                Hide();
-                foreach (var button in buttons)
-                {
-                    Object.Destroy(button.gameObject);
-                }
-            }
+            var resultQuestCode = await UniTaskUtil.WaitAndCancel(token, _onClickTasks);
+            return new Result { QuestCode = resultQuestCode };
         }
     }
 }
