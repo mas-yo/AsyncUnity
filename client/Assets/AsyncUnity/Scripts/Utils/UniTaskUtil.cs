@@ -1,5 +1,6 @@
 ﻿﻿using System;
-using System.Linq;
+ using System.Collections.Generic;
+ using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -41,6 +42,13 @@ namespace AsyncUnity.Utils
             return result;
         }
 
+        public static async UniTask<T> WaitAndCancel<T>(CancellationToken token, IEnumerable<Func<CancellationToken, UniTask<T>>> funcs)
+        {
+            var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(token);
+            var result = await UniTask.WhenAny(funcs.Select(t => t(linkedCts.Token)));
+            linkedCts.Cancel();
+            return result.result;
+        }
 
         public static async UniTask<T> WaitAndCancel<T>(CancellationToken token, params Func<CancellationToken, UniTask<T>>[] funcs)
         {
