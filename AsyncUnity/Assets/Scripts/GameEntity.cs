@@ -44,16 +44,6 @@ namespace AsyncUnity.Scenes.Game1
         {
             var view = await GameEntityView.CreateAsync(master.PrefabPath, position, name);
             var entity = new GameEntity(master, view);
-            // if (master.IsScriptControlled)
-            // {
-            //     entity.SetupScript(stageName,
-            //         environmentAccessor); //(parentTokenSource, stageName, environmentAccessor, isGameStartedFunc, token);
-            // }
-
-            // if (master.IsPlayerControlled)
-            // {
-            //     entity.SetupUserControl(isGameStartedFunc, parentTokenSource.Token);
-            // }
 
             return entity;
         }
@@ -80,16 +70,6 @@ namespace AsyncUnity.Scenes.Game1
                 _gameEvents.Add(new GameEvent(GameEventType.EntityOver, otherEntity));
             }
 
-            // if (this.Master.HasCollision
-            //     && otherEntity.Master.HasCollision
-            //     && this.View.IsMoving
-            //     && this.View.MovingProgress >= 0.5f
-            //     && this.View.CurrentMovingTarget == otherEntity.View.CurrentMovingTarget
-            //     && this.Master.Weight <= otherEntity.Master.Weight)
-            // {
-            //     var d = (this.View.Position - otherEntity.View.Position).sqrMagnitude;
-            //     _gameEvents.Add(new GameEvent(GameEventType.EntityCollision, otherEntity));
-            // }
 
         }
         public void UpdatePhysics(IEnumerable<IReadOnlyGameEntity> otherEntities)
@@ -153,28 +133,7 @@ namespace AsyncUnity.Scenes.Game1
             _gameEvents.Clear();
         }
 
-        // private void SetupScript(//CancellationTokenSource parentTokenSource,
-        //     string stageName,
-        //     EnvironmentAccessor environmentAccessor)
-        //     // Func<bool> isGameStartedFunc,
-        //     // CancellationToken token)
-        // {
-        //     _luaState = Scripting.CreateLuaState();
-        //     _luaState.Environment["this"] = this;
-        //
-        //     _luaState.SetupBasicFunctions(environmentAccessor,
-        //         (l) => _eventListeners.Add(l));
-        //     
-        //     _scriptFilePath = Scripting.CalcScriptFilePath(stageName, View.Name);
-        //     // var updateScriptPaths = Scripting.CalcUpdateScriptFilePaths(stageName, View.Name).ToArray();
-        //
-        //     if (!File.Exists(_scriptFilePath))
-        //     {
-        //         _scriptFilePath = Scripting.CalcScriptFilePath(stageName, Master.Code);
-        //     }
-        //
-        //     // _luaState.SetupStartUpdateFunctions(_scriptFilePath, isGameStartedFunc, _eventListeners, token);
-        // }
+
 
         public void SetupUserControl(Func<bool> isStartGameFunc, CancellationToken parentCancellationToken)
         {
@@ -186,24 +145,6 @@ namespace AsyncUnity.Scenes.Game1
                 }
                 var playerInput = PlayerControl.GetPlayerInput();
                 
-                // var newEntityCode = playerInput switch
-                // {
-                //     PlayerInput.PutObject1 => "TreeStump",
-                //     PlayerInput.PutObject2 => "Rock",
-                //     PlayerInput.PutObject3 => "TreasureBox",
-                //     _ => string.Empty
-                // };
-                // if (!string.IsNullOrEmpty(newEntityCode))
-                // {
-                // var master = masterData.GameEntityMasterTable.FindByCode(newEntityCode);
-                // gameEntities.Add(await CreateGameEntityAsync(
-                //     master,
-                //     entityCounter,
-                //     players.First().View.FrontPosition,
-                //     stageName, 
-                //     gameEntities,
-                //     tokenSource));
-                // }
 
 
                 switch (playerInput)
@@ -339,15 +280,5 @@ namespace AsyncUnity.Scenes.Game1
             return table;
         }
 
-        // [LuaMember(name: "WarpTo")]
-        // public async UniTask WarpTo(int x, int y)
-        // {
-        //     _scriptCancellationTokenSource.Cancel();
-        //     _scriptCancellationTokenSource = new CancellationTokenSource();
-        //     _linkedCancellationTokenSource =
-        //         CancellationTokenSource.CreateLinkedTokenSource(_parentCancellationToken, _scriptCancellationTokenSource.Token);
-        //     
-        //     await View.MoveTo(new Vector3Int(x, y), CancellationToken.None);
-        // }
     }
 }
